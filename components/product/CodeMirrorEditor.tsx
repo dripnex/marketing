@@ -98,13 +98,22 @@ interface Props {
   value: string;
   onChange: (value: string) => void;
   jumpToLine: number | null;
+  onReady?: (view: EditorView) => void;
 }
 
-export default function CodeMirrorEditor({ noteId, value, onChange, jumpToLine }: Props) {
+export default function CodeMirrorEditor({
+  noteId,
+  value,
+  onChange,
+  jumpToLine,
+  onReady,
+}: Props) {
   const parentRef = useRef<HTMLDivElement>(null);
   const viewRef = useRef<EditorView | null>(null);
   const onChangeRef = useRef(onChange);
+  const onReadyRef = useRef(onReady);
   onChangeRef.current = onChange;
+  onReadyRef.current = onReady;
 
   useEffect(() => {
     if (!parentRef.current) return;
@@ -128,6 +137,7 @@ export default function CodeMirrorEditor({ noteId, value, onChange, jumpToLine }
     });
     const view = new EditorView({ state, parent: parentRef.current });
     viewRef.current = view;
+    onReadyRef.current?.(view);
     view.focus();
     return () => {
       view.destroy();
@@ -136,6 +146,18 @@ export default function CodeMirrorEditor({ noteId, value, onChange, jumpToLine }
     // Recreate only when switching notes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [noteId]);
+
+  useEffect(() => {
+    const view = viewRef.current;
+    if (!view) return;
+    const current = view.state.doc.toString();
+    if (current === value) return;
+    view.dispatch({
+      changes: { from: 0, to: current.length, insert: value },
+      selection: { anchor: value.length },
+      scrollIntoView: true,
+    });
+  }, [value]);
 
   useEffect(() => {
     const view = viewRef.current;

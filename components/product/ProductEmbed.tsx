@@ -29,7 +29,7 @@ export default function ProductEmbed() {
           ))}
         </div>
         <a
-          href={`/try?f=${feature}`}
+          href={feature === 'write' ? '/try?demo=1' : `/try?f=${feature}`}
           className="text-[12px] text-text-muted underline-offset-4 hover:text-text-primary hover:underline"
         >
           Open full window
@@ -41,7 +41,7 @@ export default function ProductEmbed() {
       <div className="overflow-hidden rounded-[10px] border border-white/[0.08] shadow-[0_24px_80px_-32px_rgba(0,0,0,0.85)]">
         <iframe
           title="Dripnex"
-          src={`/try?f=${feature}`}
+          src={feature === 'write' ? '/try?demo=1' : `/try?f=${feature}`}
           className="block h-[min(72vh,680px)] min-h-[520px] w-full bg-[#0a0b0d]"
         />
       </div>

@@ -1,0 +1,66 @@
+.demo-hud {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  left: 12px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--bg-elevated) 92%, transparent);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(16px);
+  pointer-events: auto;
+}
+
+.demo-hud__caption {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.demo-hud__dots {
+  display: flex;
+  gap: 5px;
+  margin: 6px 0 0;
+}
+
+.demo-hud__dots span {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--text-faint);
+}
+
+.demo-hud__dots span[data-on='true'] {
+  background: var(--accent);
+}
+
+.demo-hud__step {
+  flex-shrink: 0;
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.demo-hud__retry {
+  flex-shrink: 0;
+  height: 28px;
+  padding: 0 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  background: var(--text-primary);
+  color: var(--bg-base);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.demo-hud__retry:hover {
+  opacity: 0.88;
+}

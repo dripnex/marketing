@@ -37,8 +37,12 @@ import { SidebarSection } from '../desktop/SidebarSection';
 import { EditorViewToggle } from '../desktop/EditorViewToggle';
 import { StatusGlyph } from '../desktop/StatusGlyph';
 import { scanMarkdown } from '@/lib/markdown/scan';
+import { useDemoTour } from './useDemoTour';
+import { demoSlides } from './demoSlides';
+import type { EditorView } from '@codemirror/view';
 import '../desktop/tokens.css';
 import '../desktop/layout.css';
+import './demo.css';
 
 const CodeMirrorEditor = dynamic(() => import('./CodeMirrorEditor'), { ssr: false });
 
@@ -64,6 +68,9 @@ function excerpt(content: string): string {
 export default function ProductPlayground({ fill = false }: { fill?: boolean }) {
   const params = useSearchParams();
   const featureParam = params.get('f');
+  const demoParam = params.get('demo');
+  const autoDemo = demoParam === '1' || (!featureParam && demoParam !== '0');
+  const [editorView, setEditorView] = useState<EditorView | null>(null);
   const [notes, setNotes] = useState<DemoNote[]>(seedNotes);
   const [filter, setFilter] = useState<Filter>('all');
   const [statusFilter, setStatusFilter] = useState<NoteStatus | null>(null);
@@ -124,6 +131,7 @@ export default function ProductPlayground({ fill = false }: { fill?: boolean }) 
   function applyFeature(id: FeatureId) {
     const next = features.find(item => item.id === id);
     if (!next) return;
+    setEditorView(null);
     setFeatureId(id);
     setMode(next.mode);
     setOutlineOpen(next.outline);
@@ -135,11 +143,18 @@ export default function ProductPlayground({ fill = false }: { fill?: boolean }) 
     setJumpToLine(null);
   }
 
+  const tour = useDemoTour({
+    enabled: autoDemo,
+    view: editorView,
+    applyFeature,
+    setNotes,
+  });
+
   useEffect(() => {
-    if (!featureParam) return;
+    if (!featureParam || autoDemo) return;
     if (!features.some(item => item.id === featureParam)) return;
     applyFeature(featureParam as FeatureId);
-  }, [featureParam]);
+  }, [autoDemo, featureParam]);
 
   function selectFilter(next: Filter) {
     setFilter(next);
@@ -206,17 +221,23 @@ export default function ProductPlayground({ fill = false }: { fill?: boolean }) 
         className="dripnex-app"
         style={
           fill
-            ? { height: '100%' }
+            ? { height: '100%', position: 'relative' }
             : {
                 height: 'min(72vh, 680px)',
                 minHeight: 520,
                 border: '1px solid var(--border)',
                 borderRadius: 10,
                 overflow: 'hidden',
+                position: 'relative',
               }
         }
       >
-        <div className="app__layout">
+        <div
+          className="app__layout"
+          onPointerDown={() => {
+            if (tour.status === 'running') tour.stop();
+          }}
+        >
           <aside className="app__sidebar">
             <aside className={side('sidebar')} aria-label="Main sidebar">
               <div className={side('sidebar-header')}>
@@ -484,6 +505,7 @@ export default function ProductPlayground({ fill = false }: { fill?: boolean }) 
                           value={selected.content}
                           onChange={updateSelected}
                           jumpToLine={jumpToLine}
+                          onReady={setEditorView}
                         />
                       </div>
                     ) : null}
@@ -534,6 +556,29 @@ export default function ProductPlayground({ fill = false }: { fill?: boolean }) 
             )}
           </main>
         </div>
+        {tour.status === 'running' || tour.status === 'done' ? (
+          <div className="demo-hud" onPointerDown={event => event.stopPropagation()}>
+            <div className="demo-hud__copy">
+              <p className="demo-hud__caption">
+                {tour.status === 'done' ? 'That’s every feature in this window.' : tour.caption}
+              </p>
+              <p className="demo-hud__dots" aria-hidden="true">
+                {demoSlides.map((_, index) => (
+                  <span key={index} data-on={index === tour.slide && tour.status === 'running'} />
+                ))}
+              </p>
+            </div>
+            {tour.status === 'done' ? (
+              <button type="button" className="demo-hud__retry" onClick={tour.start}>
+                Retry
+              </button>
+            ) : (
+              <span className="demo-hud__step">
+                {tour.slide + 1}/{tour.total}
+              </span>
+            )}
+          </div>
+        ) : null}
       </div>
     </div>
   );
