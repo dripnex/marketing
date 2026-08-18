@@ -269,12 +269,19 @@ function PlaygroundInner({ fill }: { fill: boolean }) {
           <aside className="app__sidebar">
             <aside className={side('sidebar')} aria-label="Main sidebar" data-demo="sidebar">
               <div className={side('sidebar-header')}>
-                <button type="button" className={side('sidebar-settings-btn')} aria-label="Open graph">
-                  <Network size={16} />
-                </button>
-                <button type="button" className={side('sidebar-settings-btn')} aria-label="Settings">
-                  <Settings size={16} />
-                </button>
+                <div className={side('traffic-lights')} aria-hidden="true">
+                  <span className={side('traffic-dot', 'traffic-close')} />
+                  <span className={side('traffic-dot', 'traffic-min')} />
+                  <span className={side('traffic-dot', 'traffic-zoom')} />
+                </div>
+                <div className={side('sidebar-header-actions')}>
+                  <button type="button" className={side('sidebar-settings-btn')} aria-label="Open graph">
+                    <Network size={16} />
+                  </button>
+                  <button type="button" className={side('sidebar-settings-btn')} aria-label="Settings">
+                    <Settings size={16} />
+                  </button>
+                </div>
               </div>
               <div className={side('sidebar-content')}>
                 <nav className={side('sidebar-quick-filters')} aria-label="Quick filters">
