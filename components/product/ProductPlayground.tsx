@@ -379,7 +379,7 @@ function PlaygroundInner({ fill }: { fill: boolean }) {
             </aside>
           </aside>
 
-          <nav className={`app__notelist ${list('note-list')}`} aria-label="Notes navigation">
+          <nav className={`app__notelist ${list('note-list')}`} aria-label="Notes navigation" data-demo="list">
             <div className={list('note-list-header')}>
               <span className={list('header-title')}>{listTitle}</span>
               <button

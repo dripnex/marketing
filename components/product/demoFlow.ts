@@ -14,7 +14,7 @@ const targets: Record<string, DemoMeta['target']> = {
   alerts: '[data-demo="preview"]',
   tasks: '[data-demo="preview"]',
   mermaid: '[data-demo="preview"]',
-  notebooks: '[data-demo="sidebar"]',
+  notebooks: '[data-demo="list"]',
 };
 
 const placements: Record<string, DemoMeta['placement']> = {
