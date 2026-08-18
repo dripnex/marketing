@@ -1,0 +1,43 @@
+/* From desktop global.css — app chrome layout only */
+.dripnex-app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+
+.app__layout {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+}
+.app__sidebar {
+  flex-shrink: 0;
+  width: var(--sidebar-width);
+  overflow: hidden;
+  border-right: 1px solid var(--border);
+}
+.app__notelist {
+  flex-shrink: 0;
+  width: var(--list-width);
+  overflow: hidden;
+  border-right: 1px solid var(--border);
+}
+.app__editor {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}

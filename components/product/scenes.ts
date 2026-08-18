@@ -1,8 +1,8 @@
 export type DemoNotebook = 'work' | 'personal';
-export type EditorMode = 'write' | 'read' | 'split';
+export type EditorMode = 'editor' | 'split' | 'preview';
 export type FeatureId = 'write' | 'outline' | 'alerts' | 'tasks' | 'mermaid' | 'notebooks';
 
-export type NoteStatus = 'active' | 'on_hold' | 'completed';
+export type NoteStatus = 'active' | 'on_hold' | 'completed' | 'dropped';
 
 export interface DemoNote {
   id: string;
@@ -29,7 +29,7 @@ export const features: FeatureScene[] = [
     label: 'Slash',
     hint: 'Type / on an empty line. Same slash table as the desktop app.',
     noteId: 'welcome',
-    mode: 'write',
+    mode: 'editor',
     outline: false,
   },
   {
@@ -37,7 +37,7 @@ export const features: FeatureScene[] = [
     label: 'Outline',
     hint: 'Headings come from the file. Click one to jump.',
     noteId: 'outline',
-    mode: 'write',
+    mode: 'editor',
     outline: true,
   },
   {
@@ -69,7 +69,7 @@ export const features: FeatureScene[] = [
     label: 'Notebooks',
     hint: 'A note lives in one notebook. Filter the list.',
     noteId: 'search',
-    mode: 'read',
+    mode: 'preview',
     outline: false,
   },
 ];

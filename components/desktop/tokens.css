@@ -1,0 +1,220 @@
+/* =============================================================================
+   DRIPNEX DESIGN TOKENS
+   Single source of truth for all visual properties.
+
+   RULES:
+   - Every CSS custom property used in the app MUST be defined here
+   - No hardcoded colors in component CSS — use tokens
+   - Both dark and light themes must define the same set of variables
+   - Aliases (compatibility layer) map old names to canonical tokens
+   ============================================================================= */
+
+/* =============================================================================
+   DARK THEME (default)
+   ============================================================================= */
+.dripnex-app {
+  color-scheme: dark;
+  /* ── Spacing Scale ────────────────────────────────────────────────────────── */
+  --space-0: 0;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+
+  /* ── Surfaces ─────────────────────────────────────────────────────────────── */
+  --bg-base: #0a0b0d;
+  --bg-surface: #111214;
+  --bg-elevated: #18191c;
+  --bg-inset: #0d0e10;
+  --bg-hover: rgba(255, 255, 255, 0.05);
+  --bg-active: rgba(255, 255, 255, 0.08);
+
+  /* ── Borders ──────────────────────────────────────────────────────────────── */
+  --border: rgba(255, 255, 255, 0.08);
+  --border-subtle: rgba(255, 255, 255, 0.04);
+  --border-strong: rgba(255, 255, 255, 0.12);
+  --border-hover: rgba(255, 255, 255, 0.12);
+
+  /* ── Text ─────────────────────────────────────────────────────────────────── */
+  --text-primary: #f4f4f5;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-muted: rgba(255, 255, 255, 0.5);
+  --text-faint: rgba(255, 255, 255, 0.3);
+
+  /* ── Accent ───────────────────────────────────────────────────────────────── */
+  --accent: #5eead4;
+  --accent-hover: #2dd4bf;
+  --accent-muted: rgba(94, 234, 212, 0.15);
+  --accent-subtle: rgba(94, 234, 212, 0.1);
+
+  /* ── Semantic Colors ──────────────────────────────────────────────────────── */
+  --danger: #f87171;
+  --danger-muted: rgba(248, 113, 113, 0.15);
+  --warning: #fbbf24;
+  --warning-muted: rgba(251, 191, 36, 0.15);
+  --success: #34d399;
+  --success-muted: rgba(52, 211, 153, 0.15);
+
+  /* ── Links ────────────────────────────────────────────────────────────────── */
+  --link: var(--accent);
+  --link-hover: var(--accent-hover);
+
+  /* ── Status (active follows Settings accent) ──────────────────────────────── */
+  --status-active: var(--accent);
+  --status-on-hold: #fbbf24;
+  --status-completed: #4ade80;
+  --status-dropped: #fb7185;
+  --status-error: var(--danger);
+
+  /* ── Glass Effects ────────────────────────────────────────────────────────── */
+  --glass-bg: rgba(20, 22, 26, 0.85);
+  --glass-bg-fallback: rgba(20, 22, 26, 0.95);
+  --glass-bg-menu: rgba(40, 45, 55, 0.92);
+  --glass-blur: 28px;
+  --glass-saturate: 180%;
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-border-menu: rgba(255, 255, 255, 0.06);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+
+  /* ── Shadows ──────────────────────────────────────────────────────────────── */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
+
+  /* ── Typography ───────────────────────────────────────────────────────────── */
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', 'Consolas', monospace;
+
+  --text-xs: 11px;
+  --text-sm: 12px;
+  --text-base: 13px;
+  --text-lg: 14px;
+  --text-xl: 16px;
+  --text-2xl: 18px;
+
+  /* ── Typography Weights ──────────────────────────────────────────────── */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* ── Line Heights ────────────────────────────────────────────────────── */
+  --leading-tight: 1.25;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.65;
+
+  /* ── Letter Spacing ──────────────────────────────────────────────────── */
+  --tracking-tight: -0.01em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.025em;
+
+  /* ── Layout ───────────────────────────────────────────────────────────────── */
+  --sidebar-width: 200px;
+  --list-width: 280px;
+
+  /* ── Radii ────────────────────────────────────────────────────────────────── */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+
+  /* ── Transitions ──────────────────────────────────────────────────────────── */
+  --transition-fast: 150ms ease;
+  --transition-normal: 200ms ease;
+  --transition-slow: 300ms ease;
+
+  /* ── Error Tokens (preview plugin errors) ─────────────────────────────────── */
+  --error-bg: var(--danger-muted);
+  --error-border: var(--danger);
+  --error-fg: var(--danger);
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     COMPATIBILITY ALIASES
+     Maps legacy variable names to canonical tokens.
+     These exist so sync/, auth/, and older CSS modules work without
+     modification. Remove these as components are migrated.
+     ═══════════════════════════════════════════════════════════════════════════ */
+
+  /* Surface aliases */
+  --bg-primary: var(--bg-base);
+  --bg-secondary: var(--bg-surface);
+  --bg-tertiary: var(--bg-elevated);
+  --surface-hover: var(--bg-hover);
+  --surface-elevated: var(--bg-elevated);
+
+  /* Text aliases */
+  --text-tertiary: var(--text-faint);
+  --text-normal: var(--text-primary);
+
+  /* Accent aliases */
+  --accent-primary: var(--accent);
+  --accent-strong: var(--accent-hover);
+
+  /* Border aliases */
+  --border-primary: var(--border);
+
+  /* Error alias */
+  --error: var(--danger);
+
+  /* --color-* namespace (used by sync/ and auth/ CSS modules) */
+  --color-bg-primary: var(--bg-base);
+  --color-bg-secondary: var(--bg-surface);
+  --color-bg-hover: var(--bg-hover);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-faint);
+  --color-border: var(--border);
+  --color-primary: var(--accent);
+  --color-primary-subtle: var(--accent-muted);
+  --color-primary-hover: var(--accent-hover);
+  --color-error: var(--danger);
+  --color-warning: var(--warning);
+  --color-success: var(--success);
+}
+
+/* =============================================================================
+   LIGHT THEME
+   ============================================================================= */
+.dripnex-app[data-color-scheme="light"] {
+  color-scheme: light;
+  /* Warm paper surfaces (Inkdrop-like), not cold gray-50 */
+  --bg-base: #f3f2ee;
+  --bg-surface: #e7e5df;
+  --bg-elevated: #fffcf7;
+  --bg-inset: #eceae4;
+  --bg-hover: rgba(28, 27, 25, 0.06);
+  --bg-active: rgba(28, 27, 25, 0.1);
+
+  --border: rgba(28, 27, 25, 0.12);
+  --border-subtle: rgba(28, 27, 25, 0.08);
+  --border-strong: rgba(28, 27, 25, 0.18);
+  --border-hover: rgba(28, 27, 25, 0.2);
+
+  --text-primary: #161513;
+  --text-secondary: rgba(22, 21, 19, 0.74);
+  --text-muted: rgba(22, 21, 19, 0.52);
+  --text-faint: rgba(22, 21, 19, 0.36);
+
+  --status-active: var(--accent);
+  --status-on-hold: #d97706;
+  --status-completed: #16a34a;
+  --status-dropped: #e11d48;
+
+  --glass-bg: rgba(247, 246, 243, 0.88);
+  --glass-bg-fallback: rgba(247, 246, 243, 0.96);
+  --glass-bg-menu: rgba(255, 255, 255, 0.94);
+  --glass-border: rgba(28, 27, 25, 0.08);
+  --glass-border-menu: rgba(28, 27, 25, 0.08);
+  --glass-shadow: 0 10px 28px rgba(28, 27, 25, 0.1);
+
+  --shadow-sm: 0 1px 2px rgba(28, 27, 25, 0.05);
+  --shadow-md: 0 4px 8px rgba(28, 27, 25, 0.07);
+  --shadow-lg: 0 10px 18px rgba(28, 27, 25, 0.08);
+  --shadow-xl: 0 18px 32px rgba(28, 27, 25, 0.12);
+}

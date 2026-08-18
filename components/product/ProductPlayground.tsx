@@ -3,16 +3,17 @@
 import { useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 import {
-  Columns2,
-  Eye,
+  FileStack,
   Folder,
   Hash,
-  Inbox,
+  List,
   MoreVertical,
-  PenLine,
+  Network,
   Search,
   Settings,
   SquarePen,
+  Trash2,
+  X,
 } from 'lucide-react';
 import {
   features,
@@ -22,20 +23,32 @@ import {
   type DemoNotebook,
   type EditorMode,
   type FeatureId,
+  type NoteStatus,
 } from './scenes';
 import MarkdownView from './MarkdownView';
-import styles from './playground.module.css';
-import './tokens.css';
-import './preview.css';
+import { sc as side } from '../desktop/sidebarSc';
+import { sc as list } from '../desktop/noteListSc';
+import { sc as ed } from '../desktop/noteEditorSc';
+import { sc as head } from '../desktop/headerSc';
+import { sc as outline } from '../desktop/outlineSc';
+import { sc as preview } from '../desktop/previewSc';
+import { SidebarSection } from '../desktop/SidebarSection';
+import { EditorViewToggle } from '../desktop/EditorViewToggle';
+import { StatusGlyph } from '../desktop/StatusGlyph';
+import { scanMarkdown } from '@/lib/markdown/scan';
+import '../desktop/tokens.css';
+import '../desktop/layout.css';
 
 const CodeMirrorEditor = dynamic(() => import('./CodeMirrorEditor'), { ssr: false });
 
 type Filter = 'all' | DemoNotebook;
 
-const STATUS_LABEL: Record<DemoNote['status'], string> = {
+const STATUS: NoteStatus[] = ['active', 'on_hold', 'completed', 'dropped'];
+const STATUS_LABEL: Record<NoteStatus, string> = {
   active: 'Active',
-  on_hold: 'On hold',
+  on_hold: 'On Hold',
   completed: 'Completed',
+  dropped: 'Dropped',
 };
 
 function excerpt(content: string): string {
@@ -50,23 +63,30 @@ function excerpt(content: string): string {
 export default function ProductPlayground() {
   const [notes, setNotes] = useState<DemoNote[]>(seedNotes);
   const [filter, setFilter] = useState<Filter>('all');
+  const [statusFilter, setStatusFilter] = useState<NoteStatus | null>(null);
+  const [tagFilter, setTagFilter] = useState<string | null>(null);
   const [query, setQuery] = useState('');
   const [selectedId, setSelectedId] = useState(seedNotes[0].id);
-  const [mode, setMode] = useState<EditorMode>('write');
+  const [mode, setMode] = useState<EditorMode>('editor');
   const [featureId, setFeatureId] = useState<FeatureId>('write');
   const [outlineOpen, setOutlineOpen] = useState(false);
   const [jumpToLine, setJumpToLine] = useState<number | null>(null);
+  const [notebookQuery, setNotebookQuery] = useState('');
 
   const feature = features.find(item => item.id === featureId) ?? features[0];
 
   const visible = useMemo(() => {
-    const scoped = filter === 'all' ? notes : notes.filter(note => note.notebook === filter);
+    let scoped = filter === 'all' ? notes : notes.filter(note => note.notebook === filter);
+    if (statusFilter) scoped = scoped.filter(note => note.status === statusFilter);
+    if (tagFilter) scoped = scoped.filter(note => note.tags.includes(tagFilter));
     const q = query.trim().toLowerCase();
-    if (!q) return scoped;
-    return scoped.filter(
-      note => note.title.toLowerCase().includes(q) || note.content.toLowerCase().includes(q),
-    );
-  }, [filter, notes, query]);
+    if (q) {
+      scoped = scoped.filter(
+        note => note.title.toLowerCase().includes(q) || note.content.toLowerCase().includes(q),
+      );
+    }
+    return scoped;
+  }, [filter, notes, query, statusFilter, tagFilter]);
 
   const selected = notes.find(note => note.id === selectedId) ?? visible[0] ?? null;
 
@@ -76,17 +96,29 @@ export default function ProductPlayground() {
     return map;
   }, [notes]);
 
-  const headings = useMemo(() => {
-    if (!selected || !outlineOpen) return [];
-    return selected.content
-      .split('\n')
-      .map((line, i) => {
-        const match = line.match(/^(#{1,6})[ \t]+(.+?)(?:[ \t]+#+[ \t]*)?$/);
-        if (!match) return null;
-        return { level: match[1]!.length, text: match[2]!.trim(), line: i + 1 };
-      })
-      .filter((item): item is { level: number; text: string; line: number } => Boolean(item));
-  }, [outlineOpen, selected]);
+  const headings = useMemo(
+    () => (selected && outlineOpen ? scanMarkdown(selected.content).headings : []),
+    [outlineOpen, selected],
+  );
+
+  const tagCounts = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const note of notes) {
+      for (const tag of note.tags) counts.set(tag, (counts.get(tag) ?? 0) + 1);
+    }
+    return [...counts.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+  }, [notes]);
+
+  const statusCounts = useMemo(() => {
+    const counts: Record<NoteStatus, number> = {
+      active: 0,
+      on_hold: 0,
+      completed: 0,
+      dropped: 0,
+    };
+    for (const note of notes) counts[note.status] += 1;
+    return counts;
+  }, [notes]);
 
   function applyFeature(id: FeatureId) {
     const next = features.find(item => item.id === id);
@@ -96,12 +128,16 @@ export default function ProductPlayground() {
     setOutlineOpen(next.outline);
     setSelectedId(next.noteId);
     setFilter(id === 'notebooks' ? 'work' : 'all');
+    setStatusFilter(null);
+    setTagFilter(null);
     setQuery('');
     setJumpToLine(null);
   }
 
   function selectFilter(next: Filter) {
     setFilter(next);
+    setStatusFilter(null);
+    setTagFilter(null);
     const first = next === 'all' ? notes[0] : notes.find(note => note.notebook === next);
     if (first) setSelectedId(first.id);
   }
@@ -136,7 +172,7 @@ export default function ProductPlayground() {
     };
     setNotes(current => [note, ...current]);
     setSelectedId(id);
-    setMode('write');
+    setMode('editor');
     setOutlineOpen(false);
   }
 
@@ -147,245 +183,378 @@ export default function ProductPlayground() {
   }
 
   const listTitle =
-    filter === 'all' ? 'All Notes' : (notebooks.find(n => n.id === filter)?.label ?? 'Notes');
+    tagFilter ??
+    (statusFilter ? STATUS_LABEL[statusFilter] : null) ??
+    (filter === 'all' ? 'All Notes' : (notebooks.find(n => n.id === filter)?.label ?? 'Notes'));
+
+  const shownNotebooks = notebooks.filter(item => {
+    if (item.id === 'all') return false;
+    if (!notebookQuery.trim()) return true;
+    return item.label.toLowerCase().includes(notebookQuery.toLowerCase());
+  });
 
   return (
-    <div className={styles.wrap}>
-      <div className={styles.rail} role="tablist" aria-label="Product features">
+    <div>
+      <div
+        style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 10 }}
+        role="tablist"
+        aria-label="Product features"
+      >
         {features.map(item => (
           <button
             key={item.id}
             type="button"
             role="tab"
             aria-selected={featureId === item.id}
-            className={styles.railBtn}
-            data-active={featureId === item.id}
             onClick={() => applyFeature(item.id)}
+            style={{
+              border: 0,
+              borderRadius: 6,
+              background: featureId === item.id ? 'rgba(255,255,255,0.08)' : 'transparent',
+              padding: '6px 10px',
+              color: featureId === item.id ? '#f4f4f5' : 'rgba(255,255,255,0.45)',
+              fontSize: 13,
+              cursor: 'pointer',
+            }}
           >
             {item.label}
           </button>
         ))}
       </div>
-      <p className={styles.hintTop}>{feature.hint}</p>
+      <p style={{ margin: '0 0 14px', color: 'rgba(255,255,255,0.4)', fontSize: 13 }}>
+        {feature.hint}
+      </p>
 
-      <div className={`dripnex-app ${styles.shell}`}>
-        <div className={styles.body} data-outline={outlineOpen}>
-          <aside className={styles.sidebar} aria-label="Notebooks">
-            <div className={styles.sidebarHeader}>
-              <span className={styles.wordmark}>dripnex.</span>
-              <button type="button" className={styles.iconBtn} aria-label="Settings" tabIndex={-1}>
-                <Settings size={16} />
-              </button>
-            </div>
-            <nav className={styles.sidebarNav}>
-              <button
-                type="button"
-                className={styles.navRow}
-                data-active={filter === 'all'}
-                onClick={() => selectFilter('all')}
-              >
-                <span className={styles.navIcon}>
-                  <Inbox size={14} />
-                </span>
-                <span className={styles.navLabel}>All Notes</span>
-                <span className={styles.navCount}>{notes.length}</span>
-              </button>
-              <p className={styles.sectionLabel}>Notebooks</p>
-              {notebooks
-                .filter(item => item.id !== 'all')
-                .map(item => {
-                  const count = notes.filter(note => note.notebook === item.id).length;
-                  return (
+      <div
+        className="dripnex-app"
+        style={{
+          height: 'min(72vh, 680px)',
+          minHeight: 520,
+          border: '1px solid var(--border)',
+          borderRadius: 10,
+          overflow: 'hidden',
+          boxShadow: '0 24px 80px -32px rgba(0,0,0,0.8)',
+        }}
+      >
+        <div className="app__layout">
+          <aside className="app__sidebar">
+            <aside className={side('sidebar')} aria-label="Main sidebar">
+              <div className={side('sidebar-header')}>
+                <button type="button" className={side('sidebar-settings-btn')} aria-label="Open graph">
+                  <Network size={16} />
+                </button>
+                <button type="button" className={side('sidebar-settings-btn')} aria-label="Settings">
+                  <Settings size={16} />
+                </button>
+              </div>
+              <div className={side('sidebar-content')}>
+                <nav className={side('sidebar-quick-filters')} aria-label="Quick filters">
+                  <button
+                    type="button"
+                    className={side(
+                      'sidebar-row',
+                      filter === 'all' && !statusFilter && !tagFilter && 'selected',
+                    )}
+                    onClick={() => selectFilter('all')}
+                    aria-pressed={filter === 'all' && !statusFilter && !tagFilter}
+                  >
+                    <span className={side('sidebar-row-icon')}>
+                      <List size={15} />
+                    </span>
+                    <span className={side('sidebar-row-label')}>All Notes</span>
+                    <span className={side('sidebar-row-count')}>{notes.length}</span>
+                  </button>
+                </nav>
+
+                <div className={side('sidebar-templates')}>
+                  <button type="button" className={side('sidebar-row')}>
+                    <span className={side('sidebar-row-icon')}>
+                      <FileStack size={15} />
+                    </span>
+                    <span className={side('sidebar-row-label')}>Note Templates</span>
+                  </button>
+                </div>
+
+                <SidebarSection
+                  title="Notebooks"
+                  collapsible
+                  searchable
+                  searchQuery={notebookQuery}
+                  onSearchChange={setNotebookQuery}
+                  searchPlaceholder="Filter notebooks"
+                >
+                  {shownNotebooks.map(item => {
+                    const count = notes.filter(note => note.notebook === item.id).length;
+                    return (
+                      <button
+                        key={item.id}
+                        type="button"
+                        className={side('notebook-item-row', filter === item.id && 'selected')}
+                        onClick={() => selectFilter(item.id)}
+                      >
+                        <span className={side('notebook-item-icon')}>
+                          <Folder size={12} />
+                        </span>
+                        <span className={side('notebook-item-name')}>{item.label}</span>
+                        <span className={side('notebook-item-count')}>{count}</span>
+                      </button>
+                    );
+                  })}
+                </SidebarSection>
+
+                <SidebarSection title="Status" collapsible>
+                  <nav className={side('sidebar-status-filters')} aria-label="Status filters">
+                    {STATUS.map(status => (
+                      <button
+                        key={status}
+                        type="button"
+                        className={side('sidebar-row', statusFilter === status && 'selected')}
+                        onClick={() => setStatusFilter(current => (current === status ? null : status))}
+                        aria-pressed={statusFilter === status}
+                        data-status={status}
+                      >
+                        <span className={side('sidebar-row-icon', 'sidebar-status-icon')}>
+                          <StatusGlyph status={status} />
+                        </span>
+                        <span className={side('sidebar-row-label')}>{STATUS_LABEL[status]}</span>
+                        <span className={side('sidebar-row-count')}>{statusCounts[status]}</span>
+                      </button>
+                    ))}
+                  </nav>
+                </SidebarSection>
+
+                <SidebarSection title="Tags" collapsible>
+                  {tagCounts.map(([tag, count]) => (
                     <button
-                      key={item.id}
+                      key={tag}
                       type="button"
-                      className={styles.nbRow}
-                      data-active={filter === item.id}
-                      onClick={() => selectFilter(item.id)}
+                      className={side('sidebar-row', tagFilter === tag && 'selected')}
+                      onClick={() => setTagFilter(current => (current === tag ? null : tag))}
                     >
-                      <span className={styles.navIcon}>
-                        <Folder size={14} />
-                      </span>
-                      <span className={styles.navLabel}>{item.label}</span>
-                      <span className={styles.navCount}>{count}</span>
+                      <span className={side('sidebar-row-label')}>#{tag}</span>
+                      <span className={side('sidebar-row-count')}>{count}</span>
                     </button>
-                  );
-                })}
-            </nav>
-            <p className={styles.sidebarFoot}>Browser preview. Files stay on disk in the app.</p>
+                  ))}
+                </SidebarSection>
+
+                <button type="button" className={side('sidebar-row', 'sidebar-trash')}>
+                  <span className={side('sidebar-row-icon')}>
+                    <Trash2 size={15} />
+                  </span>
+                  <span className={side('sidebar-row-label')}>Trash</span>
+                  <span className={side('sidebar-row-count')}>0</span>
+                </button>
+              </div>
+            </aside>
           </aside>
 
-          <section className={styles.list} aria-label="Notes">
-            <div className={styles.listHeader}>
-              <h2 className={styles.listTitle}>{listTitle}</h2>
-              <button type="button" className={styles.iconBtn} onClick={addNote} aria-label="New note">
+          <nav className={`app__notelist ${list('note-list')}`} aria-label="Notes navigation">
+            <div className={list('note-list-header')}>
+              <span className={list('header-title')}>{listTitle}</span>
+              <button
+                type="button"
+                className={list('header-btn')}
+                onClick={addNote}
+                aria-label="Create new note"
+              >
                 <SquarePen size={16} />
               </button>
             </div>
-            <div className={styles.searchWrap}>
-              <Search size={14} className={styles.searchIcon} />
-              <input
-                className={styles.searchInput}
-                value={query}
-                onChange={event => setQuery(event.target.value)}
-                placeholder="Search"
-                aria-label="Search notes"
-              />
+            <div className={list('note-list-search')}>
+              <div className={list('search-input-wrapper')}>
+                <Search size={14} className={list('search-icon')} aria-hidden="true" />
+                <label htmlFor="note-search" className="visually-hidden">
+                  Search notes
+                </label>
+                <input
+                  id="note-search"
+                  type="search"
+                  placeholder="Search or tag:work status:active notebook:inbox"
+                  value={query}
+                  onChange={event => setQuery(event.target.value)}
+                  className={list('search-input')}
+                />
+                {query ? (
+                  <button
+                    className={list('search-clear')}
+                    onClick={() => setQuery('')}
+                    aria-label="Clear search"
+                    type="button"
+                  >
+                    <X size={14} />
+                  </button>
+                ) : null}
+              </div>
+              <p className={list('search-hint')}>
+                tag:work · status:active · notebook:inbox · is:pinned · is:trash
+              </p>
             </div>
-            <div className={styles.listItems}>
-              {visible.map(note => (
-                <button
-                  key={note.id}
-                  type="button"
-                  className={styles.noteItem}
-                  data-active={selected?.id === note.id}
-                  onClick={() => setSelectedId(note.id)}
-                >
-                  <span className={styles.noteTitle}>{note.title}</span>
-                  <span className={styles.noteMeta}>
-                    <span className={styles.noteTime}>{note.updated}</span>
-                    {note.tags.map(tag => (
-                      <span key={tag} className={styles.tag}>
-                        {tag}
-                      </span>
-                    ))}
-                  </span>
-                  <span className={styles.notePreview}>{excerpt(note.content) || firstLine(note.content)}</span>
-                </button>
-              ))}
+            <div className={list('note-list-content')}>
+              <ul className={list('note-list-items')} role="listbox" aria-label="Notes">
+                {visible.map((note, index) => (
+                  <li
+                    key={note.id}
+                    id={`note-${note.id}`}
+                    role="option"
+                    aria-selected={selected?.id === note.id}
+                    className={list('note-list-item', selected?.id === note.id && 'selected')}
+                    style={{ '--item-index': Math.min(index, 10) } as React.CSSProperties}
+                    onClick={() => setSelectedId(note.id)}
+                    onKeyDown={event => {
+                      if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        setSelectedId(note.id);
+                      }
+                    }}
+                    tabIndex={0}
+                  >
+                    <div className={list('note-list-item-title')}>
+                      <span
+                        className={list('kind-dot')}
+                        style={{ background: 'var(--status-active)' }}
+                      />
+                      {note.title || 'Untitled'}
+                    </div>
+                    <div className={list('note-list-item-meta')}>
+                      <span className={list('timestamp')}>{note.updated}</span>
+                      {note.tags.length > 0 ? (
+                        <span className={list('tags')}>
+                          {note.tags.slice(0, 2).map(tag => (
+                            <button
+                              key={tag}
+                              type="button"
+                              className={list('tag-badge', 'tag-badge-clickable')}
+                              onClick={event => {
+                                event.stopPropagation();
+                                setTagFilter(tag);
+                              }}
+                            >
+                              {tag}
+                            </button>
+                          ))}
+                        </span>
+                      ) : null}
+                    </div>
+                    <div className={list('note-list-item-preview')}>{excerpt(note.content)}</div>
+                  </li>
+                ))}
+              </ul>
             </div>
-          </section>
+          </nav>
 
-          <section className={styles.editor} aria-label="Editor">
+          <main className={`app__editor ${ed('note-editor')}`} aria-label="Note editor">
             {selected ? (
               <>
-                <header className={styles.editorHeader}>
+                <header className={ed('note-editor-header')}>
                   <input
-                    className={styles.titleInput}
+                    className={ed('title-input')}
                     value={selected.title}
                     onChange={event => renameSelected(event.target.value)}
                     aria-label="Note title"
                   />
-                  <div className={styles.headerMid}>
-                    <div className={styles.toggle} role="group" aria-label="View mode">
-                      {(
-                        [
-                          ['write', 'Edit', PenLine],
-                          ['split', 'Split', Columns2],
-                          ['read', 'Preview', Eye],
-                        ] as const
-                      ).map(([id, label, Icon]) => (
-                        <button
-                          key={id}
-                          type="button"
-                          className={styles.toggleBtn}
-                          data-active={mode === id}
-                          onClick={() => setMode(id)}
-                          title={label}
-                          aria-label={label}
-                        >
-                          <Icon size={16} />
-                        </button>
-                      ))}
-                    </div>
-                    <div className={styles.toggle} role="group" aria-label="Outline">
+                  <div className={ed('note-editor-header-mid')}>
+                    <EditorViewToggle mode={mode} onModeChange={setMode} />
+                    <div className={ed('editor-view-toggle')} role="group" aria-label="Outline">
                       <button
                         type="button"
-                        className={styles.toggleBtn}
-                        data-active={outlineOpen}
+                        className={ed('editor-view-toggle-btn', outlineOpen && 'active')}
                         onClick={() => setOutlineOpen(open => !open)}
                         title="Outline"
                         aria-label="Toggle outline"
+                        aria-pressed={outlineOpen}
                       >
                         <Hash size={16} />
                       </button>
                     </div>
                   </div>
-                  <div className={styles.headerActions}>
-                    <button type="button" className={styles.iconBtn} aria-label="More actions" tabIndex={-1}>
+                  <div className={ed('note-editor-header-actions')}>
+                    <button type="button" className={ed('note-editor-actions-btn')} aria-label="More actions">
                       <MoreVertical size={18} />
                     </button>
                   </div>
                 </header>
-                <div className={styles.meta}>
-                  <span className={styles.metaBtn}>
+                <div className={head('editor-header')}>
+                  <button type="button" className={head('editor-header-dropdown-btn')}>
                     <Folder size={12} />
                     {notebooks.find(n => n.id === selected.notebook)?.label}
-                  </span>
-                  <span className={styles.metaBtn}>
-                    <span className={styles.statusDot} data-status={selected.status} />
+                  </button>
+                  <button type="button" className={head('editor-header-dropdown-btn')}>
+                    <StatusGlyph status={selected.status} />
                     {STATUS_LABEL[selected.status]}
-                  </span>
-                  {selected.tags.length === 0 ? (
-                    <span className={styles.metaBtn}>Tags</span>
-                  ) : (
-                    selected.tags.map(tag => (
-                      <span key={tag} className={styles.tag}>
-                        #{tag}
-                      </span>
-                    ))
-                  )}
-                </div>
-                <div className={styles.workspace}>
-                  <div className={styles.panes} data-mode={mode}>
-                    {mode !== 'read' && (
-                      <CodeMirrorEditor
-                        noteId={selected.id}
-                        value={selected.content}
-                        onChange={updateSelected}
-                        jumpToLine={jumpToLine}
-                      />
-                    )}
-                    {mode !== 'write' && (
-                      <div className={styles.read}>
-                        <MarkdownView
-                          content={selected.content}
-                          notesByTitle={notesByTitle}
-                          onOpenNote={openNote}
-                          onChange={updateSelected}
-                        />
-                      </div>
+                  </button>
+                  <div className={head('tags-display')}>
+                    {selected.tags.length === 0 ? (
+                      <span className={head('tags-display-empty')}>Tags</span>
+                    ) : (
+                      selected.tags.map(tag => (
+                        <span key={tag} className={head('tag-chip')}>
+                          <span className={head('tag-hash')}>#</span>
+                          {tag}
+                        </span>
+                      ))
                     )}
                   </div>
+                </div>
+                <div className={ed('note-editor-workspace')}>
+                  <div className={ed('note-editor-body', `note-editor-body--${mode}`)}>
+                    {mode !== 'preview' ? (
+                      <div className={ed('split-pane', 'split-pane--editor')}>
+                        <CodeMirrorEditor
+                          noteId={selected.id}
+                          value={selected.content}
+                          onChange={updateSelected}
+                          jumpToLine={jumpToLine}
+                        />
+                      </div>
+                    ) : null}
+                    {mode !== 'editor' ? (
+                      <div className={ed('split-pane', 'split-pane--preview')}>
+                        <div className={preview('markdown-preview')} data-preview>
+                          <MarkdownView
+                            content={selected.content}
+                            notesByTitle={notesByTitle}
+                            onOpenNote={openNote}
+                            onChange={updateSelected}
+                          />
+                        </div>
+                      </div>
+                    ) : null}
+                  </div>
                   {outlineOpen ? (
-                    <aside className={styles.outline} aria-label="Note outline">
-                      <p className={styles.outlineLabel}>Outline</p>
+                    <aside className={outline('outline')} aria-label="Note outline">
+                      <p className={outline('outline-label')}>Outline</p>
                       {headings.length === 0 ? (
-                        <p className={styles.outlineEmpty}>No headings</p>
+                        <p className={outline('outline-empty')}>No headings</p>
                       ) : (
-                        headings.map(heading => (
-                          <button
-                            key={`${heading.line}-${heading.text}`}
-                            type="button"
-                            className={`${styles.outlineItem} ${heading.level > 1 ? styles[`outlineL${heading.level}` as 'outlineL2'] : ''}`}
-                            onClick={() => {
-                              setMode(mode === 'read' ? 'write' : mode);
-                              setJumpToLine(heading.line);
-                            }}
-                          >
-                            {heading.text}
-                          </button>
-                        ))
+                        <nav>
+                          {headings.map(heading => (
+                            <button
+                              key={`${heading.line}-${heading.text}`}
+                              type="button"
+                              className={outline('outline-item', `outline-item--l${heading.level}`)}
+                              onClick={() => {
+                                setMode(mode === 'preview' ? 'editor' : mode);
+                                setJumpToLine(heading.line);
+                              }}
+                            >
+                              {heading.text}
+                            </button>
+                          ))}
+                        </nav>
                       )}
                     </aside>
                   ) : null}
                 </div>
               </>
             ) : (
-              <div className={styles.empty}>Select a note to edit</div>
+              <div className={ed('note-editor-empty')}>
+                <p className={ed('empty-title')}>Select a note to edit</p>
+                <p className={ed('empty-hint')}>Or press ⌘N to create a new one</p>
+              </div>
             )}
-          </section>
+          </main>
         </div>
       </div>
     </div>
-  );
-}
-
-function firstLine(content: string): string {
-  return (
-    content
-      .split('\n')
-      .map(line => line.replace(/^#+\s*/, '').trim())
-      .find(Boolean) ?? ''
   );
 }
