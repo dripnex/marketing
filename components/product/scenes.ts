@@ -45,7 +45,7 @@ export const features: FeatureScene[] = [
     label: 'Alerts',
     hint: 'GitHub alerts are Markdown. Preview renders them.',
     noteId: 'alerts',
-    mode: 'split',
+    mode: 'editor',
     outline: false,
   },
   {
@@ -59,9 +59,9 @@ export const features: FeatureScene[] = [
   {
     id: 'mermaid',
     label: 'Mermaid',
-    hint: 'A ```mermaid fence. The diagram is the source, not a screenshot.',
+    hint: 'A mermaid fence is the diagram — not a screenshot.',
     noteId: 'mermaid',
-    mode: 'split',
+    mode: 'editor',
     outline: false,
   },
   {
@@ -178,9 +178,9 @@ The file is the source of truth. SQLite is an index.
 
 \`\`\`mermaid
 flowchart LR
-  file[".md on disk"] --> editor[Editor]
-  editor --> file
-  file --> index[SQLite index]
+  disk[".md on disk"] --> editor[Editor]
+  editor --> disk
+  disk --> index[SQLite]
   index --> search[Search]
 \`\`\`
 

@@ -158,6 +158,23 @@ function PlaygroundInner({ fill }: { fill: boolean }) {
   demoHost.getView = () => editorView;
   demoHost.applyFeature = applyFeature;
   demoHost.resetNotes = () => setNotes(seedNotes.map(note => ({ ...note })));
+  demoHost.setMode = setMode;
+  demoHost.setOutline = setOutlineOpen;
+  demoHost.jumpToLine = setJumpToLine;
+  demoHost.checkNextTask = () => {
+    setNotes(current =>
+      current.map(note =>
+        note.id === selectedId && note.content.includes('- [ ]')
+          ? { ...note, content: note.content.replace('- [ ]', '- [x]'), updated: 'just now' }
+          : note,
+      ),
+    );
+  };
+  demoHost.announceStep = (id: FeatureId) => {
+    if (window.parent !== window) {
+      window.parent.postMessage({ source: 'dripnex-demo', step: id }, '*');
+    }
+  };
 
   useEffect(() => {
     if (autoDemo && state.status === 'idle') start();
