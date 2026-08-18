@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import ProductDemo from '@/components/landing/ProductDemo';
-import { DOCS_URL } from '@/lib/site';
+import { DOCS_URL } from '@/lib/config';
 
 const editor = [
   {

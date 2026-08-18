@@ -3,9 +3,11 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { DOCS_URL } from '@/lib/site';
+import { DOCS_URL } from '@/lib/config';
 
-const links = [
+type NavLink = { label: string; href: string; external?: boolean };
+
+const links: NavLink[] = [
   { label: 'Download', href: '/download' },
   { label: 'Plugins', href: '/plugins' },
   { label: 'Docs', href: DOCS_URL, external: true },
@@ -34,13 +36,7 @@ export default function Navbar() {
         <div className="hidden items-center gap-1 md:flex">
           {links.map(link =>
             link.external ? (
-              <a
-                key={link.href}
-                href={link.href}
-                className={navLinkClass}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a key={link.href} href={link.href} className={navLinkClass}>
                 {link.label}
               </a>
             ) : (
@@ -97,13 +93,11 @@ export default function Navbar() {
                   { label: 'Sign up', href: '/signup' },
                 ].map(link => (
                   <li key={link.href}>
-                    {'external' in link && link.external ? (
+                    {link.external ? (
                       <a
                         href={link.href}
                         onClick={() => setOpen(false)}
                         className="block rounded-md px-3 py-3 text-sm text-text-secondary hover:bg-white/[0.04] hover:text-text-primary"
-                        target="_blank"
-                        rel="noopener noreferrer"
                       >
                         {link.label}
                       </a>

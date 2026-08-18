@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
+import { URLS } from '@/lib/config';
 
-const API_BASE = 'https://api.dripnex.app';
+const API_BASE = URLS.api;
 
 interface Stats {
   users: { total: number; newLast7Days: number };

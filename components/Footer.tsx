@@ -1,7 +1,9 @@
 import Link from 'next/link';
-import { DOCS_URL } from '@/lib/site';
+import { DOCS_URL } from '@/lib/config';
 
-const columns = [
+type FooterLink = { label: string; href: string; external?: boolean };
+
+const columns: { title: string; links: FooterLink[] }[] = [
   {
     title: 'Product',
     links: [
@@ -52,13 +54,11 @@ export default function Footer() {
                 {column.title}
               </span>
               {column.links.map(link =>
-                'external' in link && link.external ? (
+                link.external ? (
                   <a
                     key={link.href}
                     href={link.href}
                     className="w-fit text-[13px] text-text-secondary hover:text-text-primary"
-                    target="_blank"
-                    rel="noopener noreferrer"
                   >
                     {link.label}
                   </a>

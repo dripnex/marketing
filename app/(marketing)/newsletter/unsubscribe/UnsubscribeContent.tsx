@@ -3,8 +3,9 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { URLS } from '@/lib/config';
 
-const API_BASE = 'https://api.dripnex.app';
+const API_BASE = URLS.api;
 
 export default function UnsubscribeContent() {
   const searchParams = useSearchParams();

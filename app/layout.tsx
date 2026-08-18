@@ -6,7 +6,7 @@ import '@fontsource/inter/700.css';
 import '@fontsource-variable/jetbrains-mono';
 import type { ReactNode } from 'react';
 import type { Metadata } from 'next';
-import { SITE_URL } from '@/lib/site';
+import { SITE_URL } from '@/lib/config';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

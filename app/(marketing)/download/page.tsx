@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Download, Check, Cpu, ExternalLink } from 'lucide-react';
-import { getProductConfig } from '@dripnex/product-config';
+import { getProductConfig } from '@/lib/config';
 import { fetchLatestRelease, formatBytes } from '@/lib/github';
 import type { PlatformAsset } from '@/lib/github';
 import NewsletterForm from '@/components/NewsletterForm';

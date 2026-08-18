@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import PluginFilter from '@/components/PluginFilter';
 import pluginsData from '@/data/plugins.json';
-import { DOCS_URL } from '@/lib/site';
+import { DOCS_URL } from '@/lib/config';
 
 export const metadata: Metadata = {
   title: 'Plugins — Dripnex',

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { getProductConfig } from '@dripnex/product-config';
+import { getProductConfig } from '@/lib/config';
 import SubscribeFlow from '@/components/SubscribeFlow';
 
 export const metadata: Metadata = {

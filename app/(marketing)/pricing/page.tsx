@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import {
   Heart,
@@ -9,7 +10,7 @@ import {
   Check,
   ArrowRight,
 } from 'lucide-react';
-import { getProductConfig } from '@dripnex/product-config';
+import { getProductConfig } from '@/lib/config';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -21,6 +22,11 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from '@/components/ui/accordion';
+
+export const metadata: Metadata = {
+  title: 'Pricing',
+  description: 'Free for the core editor. Pro is sync and extras, not the notes.',
+};
 
 export default function PricingPage() {
   const config = getProductConfig();

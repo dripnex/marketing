@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from 'react';
 import Link from 'next/link';
-import { URLS } from '@dripnex/product-config';
+import { URLS } from '@/lib/config';
 
 type Mode = 'signin' | 'signup';
 
@@ -19,7 +19,7 @@ export default function AuthCard({ mode }: { mode: Mode }) {
     setError(null);
     setPending(true);
     try {
-      const response = await fetch(`${URLS.apiFallback}/auth/magic-link`, {
+      const response = await fetch(`${URLS.api}/auth/magic-link`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: email.trim(), client: 'web' }),

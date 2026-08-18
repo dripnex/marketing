@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { MessageCircle } from 'lucide-react';
-import { getProductConfig, URLS } from '@dripnex/product-config';
+import { getProductConfig, URLS } from '@/lib/config';
 import FaqAccordion from '@/components/FaqAccordion';
 
 export const metadata: Metadata = {

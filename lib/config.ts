@@ -1,16 +1,23 @@
-/**
- * Facade API for product configuration
- *
- * This provides a STABLE public interface for consumers.
- * Use getProductConfig() instead of importing raw data exports.
- */
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://dripnex.app';
+export const DOCS_URL = process.env.NEXT_PUBLIC_DOCS_URL ?? 'https://docs.dripnex.app';
 
-// ═══════════════════════════════════════════════════════════════
-// TYPES
-// ═══════════════════════════════════════════════════════════════
+export const URLS = {
+  website: SITE_URL,
+  docs: DOCS_URL,
+  pricing: `${SITE_URL}/pricing`,
+  download: `${SITE_URL}/download`,
+  faq: `${SITE_URL}/faq`,
+  changelog: `${SITE_URL}/changelog`,
+  github: 'https://github.com/dripnex/readide',
+  discussions: 'https://github.com/dripnex/readide/discussions',
+  issues: 'https://github.com/dripnex/readide/issues',
+  twitter: 'https://x.com/dripnex',
+  support: 'hello@dripnex.app',
+  api: 'https://api.dripnex.app',
+} as const;
 
-export type BillingInterval = 'monthly' | 'annual';
 export type PlanId = 'free' | 'pro';
+export type BillingInterval = 'monthly' | 'annual';
 export type GuaranteeId = 'refund' | 'noLockIn' | 'freeTierForever' | 'cancelAnytime';
 
 export interface PlanPricing {
@@ -35,23 +42,6 @@ export interface ProductConfig {
   readonly guarantees: Record<GuaranteeId, { readonly description: string }>;
 }
 
-// ═══════════════════════════════════════════════════════════════
-// FACADE
-// ═══════════════════════════════════════════════════════════════
-
-/**
- * Returns a stable public config shape.
- *
- * This is the PREFERRED API - consumers should use this function
- * instead of importing raw data exports (PRICING, PLANS, etc.)
- *
- * @example
- * ```typescript
- * const config = getProductConfig();
- * console.log(config.plans.pro.pricing?.intervals.monthly.label); // '€2/mo'
- * console.log(config.trialDays); // 14
- * ```
- */
 export function getProductConfig(): ProductConfig {
   return {
     trialDays: 14,

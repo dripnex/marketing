@@ -15,8 +15,7 @@
     "incremental": true,
     "plugins": [{ "name": "next" }],
     "paths": {
-      "@/*": ["./*"],
-      "@dripnex/product-config": ["./lib/product-config/index.ts"]
+      "@/*": ["./*"]
     }
   },
   "include": [

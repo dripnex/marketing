@@ -3,6 +3,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { marked } from 'marked';
+import { URLS } from '@/lib/config';
 
 interface NoteData {
   title?: string;
@@ -10,7 +11,7 @@ interface NoteData {
   createdAt: string;
 }
 
-const API_BASE = 'https://api.dripnex.app';
+const API_BASE = URLS.api;
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString('en-US', {
