@@ -1,0 +1,2 @@
+/docs https://dripnex-docs.pages.dev 301
+/docs/* https://dripnex-docs.pages.dev/:splat 301
