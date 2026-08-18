@@ -2,11 +2,15 @@ export type DemoNotebook = 'work' | 'personal';
 export type EditorMode = 'write' | 'read' | 'split';
 export type FeatureId = 'write' | 'outline' | 'alerts' | 'tasks' | 'mermaid' | 'notebooks';
 
+export type NoteStatus = 'active' | 'on_hold' | 'completed';
+
 export interface DemoNote {
   id: string;
   title: string;
   notebook: DemoNotebook;
   updated: string;
+  status: NoteStatus;
+  tags: string[];
   content: string;
 }
 
@@ -82,6 +86,8 @@ export const seedNotes: DemoNote[] = [
     title: 'Welcome',
     notebook: 'personal',
     updated: 'just now',
+    status: 'active',
+    tags: ['welcome'],
     content: `# Welcome
 
 This is the same Markdown editor. Type \`/\` on the next line.
@@ -93,6 +99,8 @@ This is the same Markdown editor. Type \`/\` on the next line.
     title: 'How a release goes out',
     notebook: 'work',
     updated: '2d ago',
+    status: 'active',
+    tags: ['release', 'ship'],
     content: `# How a release goes out
 
 Writing this down because I re-derive it every time.
@@ -121,6 +129,8 @@ The signed build comes from the tag. The notes stay \`.md\` either way.
     title: 'Review notes',
     notebook: 'work',
     updated: '3d ago',
+    status: 'on_hold',
+    tags: ['review'],
     content: `# Review notes
 
 > [!NOTE]
@@ -141,6 +151,8 @@ The signed build comes from the tag. The notes stay \`.md\` either way.
     title: 'Tuesday',
     notebook: 'personal',
     updated: '5d ago',
+    status: 'active',
+    tags: ['daily'],
     content: `# Tuesday
 
 Local files. Standard Markdown.
@@ -158,6 +170,8 @@ If the app disappears, the files do not.
     title: 'Note path',
     notebook: 'work',
     updated: '1d ago',
+    status: 'active',
+    tags: ['architecture'],
     content: `# Note path
 
 The file is the source of truth. SQLite is an index.
@@ -178,6 +192,8 @@ Rebuild the index from the files. Never the other way around.
     title: 'Local search notes',
     notebook: 'work',
     updated: '1w ago',
+    status: 'completed',
+    tags: ['search', 'sqlite'],
     content: `# Local search notes
 
 SQLite is an index, not the source of truth.
