@@ -354,7 +354,7 @@ function PlaygroundInner({ fill }: { fill: boolean }) {
                   </nav>
                 </SidebarSection>
 
-                <SidebarSection title="Tags" collapsible>
+                <SidebarSection title="Tags" collapsible defaultCollapsed>
                   {tagCounts.map(([tag, count]) => (
                     <button
                       key={tag}
@@ -400,7 +400,7 @@ function PlaygroundInner({ fill }: { fill: boolean }) {
                 <input
                   id="note-search"
                   type="search"
-                  placeholder="Search or tag:work status:active notebook:inbox"
+                  placeholder="Search"
                   value={query}
                   onChange={event => setQuery(event.target.value)}
                   className={list('search-input')}
@@ -416,9 +416,6 @@ function PlaygroundInner({ fill }: { fill: boolean }) {
                   </button>
                 ) : null}
               </div>
-              <p className={list('search-hint')}>
-                tag:work · status:active · notebook:inbox · is:pinned · is:trash
-              </p>
             </div>
             <div className={list('note-list-content')}>
               <ul className={list('note-list-items')} role="listbox" aria-label="Notes">

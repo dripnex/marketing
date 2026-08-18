@@ -387,12 +387,12 @@
   color: white;
 }
 
-/* Sidebar Header - aligned with traffic lights (y: 8) */
+/* Sidebar Header — no Electron traffic-light inset on the web */
 .sidebar-header {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  padding: 8px 8px 0 72px;
+  padding: 8px 10px 0;
   height: 36px;
   -webkit-app-region: drag;
   flex-shrink: 0;

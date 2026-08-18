@@ -1,45 +1,17 @@
-[data-cairn-popover] {
-  z-index: 40;
-  max-width: 260px;
-  padding: 10px 12px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--bg-elevated);
-  color: var(--text-primary);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
-}
-
-[data-cairn-arrow] {
-  fill: var(--bg-elevated);
-}
-
-.demo-popover__title {
-  margin: 0;
-  font-size: 13px;
-  line-height: 1.4;
-}
-
-.demo-popover__step {
-  margin: 6px 0 0;
-  color: var(--text-faint);
-  font-family: var(--font-mono);
-  font-size: 11px;
-}
-
 .demo-hud {
   position: absolute;
   right: 12px;
   bottom: 12px;
   left: 12px;
-  z-index: 5;
+  z-index: 20;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 10px 12px;
+  padding: 10px 14px;
   border: 1px solid var(--border);
   border-radius: 8px;
-  background: color-mix(in srgb, var(--bg-elevated) 92%, transparent);
+  background: color-mix(in srgb, var(--bg-elevated) 94%, transparent);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
   backdrop-filter: blur(16px);
   pointer-events: auto;
@@ -80,7 +52,7 @@
   flex-shrink: 0;
   height: 28px;
   padding: 0 12px;
-  border: 1px solid var(--border-strong);
+  border: 0;
   border-radius: 6px;
   background: var(--text-primary);
   color: var(--bg-base);
@@ -91,4 +63,8 @@
 
 .demo-hud__retry:hover {
   opacity: 0.88;
+}
+
+.dripnex-app:has(.demo-hud) .app__editor {
+  padding-bottom: 64px;
 }
