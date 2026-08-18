@@ -7,8 +7,6 @@ export default function ProductEmbed() {
   const [feature, setFeature] = useState<FeatureId>('write');
   const [live, setLive] = useState(true);
   const [epoch, setEpoch] = useState(0);
-  const current = features.find(item => item.id === feature) ?? features[0];
-
   useEffect(() => {
     function onMessage(event: MessageEvent) {
       const data = event.data as { source?: string; step?: FeatureId } | null;
@@ -64,10 +62,7 @@ export default function ProductEmbed() {
           </a>
         </div>
       </div>
-      <p className="mt-3 mb-4 max-w-[48ch] text-[13px] leading-relaxed text-text-muted">
-        {current.hint}
-      </p>
-      <div className="overflow-hidden rounded-[10px] border border-white/[0.08] shadow-[0_24px_80px_-32px_rgba(0,0,0,0.85)]">
+      <div className="mt-4 overflow-hidden rounded-[10px] border border-white/[0.08] shadow-[0_24px_80px_-32px_rgba(0,0,0,0.85)]">
         <iframe
           title="Dripnex"
           src={live ? `/try?demo=1&r=${epoch}` : `/try?f=${feature}`}

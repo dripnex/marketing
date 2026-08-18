@@ -40,11 +40,9 @@ import { scanMarkdown } from '@/lib/markdown/scan';
 import { FlowProvider, useFlow } from 'cairn-react';
 import { dripnexDemoFlow } from './demoFlow';
 import { demoHost } from './demoHost';
-import DemoOverlay from './DemoOverlay';
 import type { EditorView } from '@codemirror/view';
 import '../desktop/tokens.css';
 import '../desktop/layout.css';
-import './demo.css';
 
 const CodeMirrorEditor = dynamic(() => import('./CodeMirrorEditor'), { ssr: false });
 
@@ -583,7 +581,6 @@ function PlaygroundInner({ fill }: { fill: boolean }) {
             )}
           </main>
         </div>
-        <DemoOverlay />
       </div>
     </div>
   );
