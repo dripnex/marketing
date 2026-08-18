@@ -37,8 +37,10 @@ import { SidebarSection } from '../desktop/SidebarSection';
 import { EditorViewToggle } from '../desktop/EditorViewToggle';
 import { StatusGlyph } from '../desktop/StatusGlyph';
 import { scanMarkdown } from '@/lib/markdown/scan';
-import { useDemoTour } from './useDemoTour';
-import { demoSlides } from './demoSlides';
+import { FlowProvider, useFlow } from 'cairn-react';
+import { dripnexDemoFlow } from './demoFlow';
+import { demoHost } from './demoHost';
+import DemoOverlay from './DemoOverlay';
 import type { EditorView } from '@codemirror/view';
 import '../desktop/tokens.css';
 import '../desktop/layout.css';
@@ -66,6 +68,14 @@ function excerpt(content: string): string {
 }
 
 export default function ProductPlayground({ fill = false }: { fill?: boolean }) {
+  return (
+    <FlowProvider flow={dripnexDemoFlow} options={{ autoStart: false }}>
+      <PlaygroundInner fill={fill} />
+    </FlowProvider>
+  );
+}
+
+function PlaygroundInner({ fill }: { fill: boolean }) {
   const params = useSearchParams();
   const featureParam = params.get('f');
   const demoParam = params.get('demo');
@@ -143,12 +153,15 @@ export default function ProductPlayground({ fill = false }: { fill?: boolean }) 
     setJumpToLine(null);
   }
 
-  const tour = useDemoTour({
-    enabled: autoDemo,
-    view: editorView,
-    applyFeature,
-    setNotes,
-  });
+  const { start, dismiss, state } = useFlow();
+
+  demoHost.getView = () => editorView;
+  demoHost.applyFeature = applyFeature;
+  demoHost.resetNotes = () => setNotes(seedNotes.map(note => ({ ...note })));
+
+  useEffect(() => {
+    if (autoDemo && state.status === 'idle') start();
+  }, [autoDemo, start, state.status]);
 
   useEffect(() => {
     if (!featureParam || autoDemo) return;
@@ -235,11 +248,11 @@ export default function ProductPlayground({ fill = false }: { fill?: boolean }) 
         <div
           className="app__layout"
           onPointerDown={() => {
-            if (tour.status === 'running') tour.stop();
+            if (state.status === 'active') dismiss();
           }}
         >
           <aside className="app__sidebar">
-            <aside className={side('sidebar')} aria-label="Main sidebar">
+            <aside className={side('sidebar')} aria-label="Main sidebar" data-demo="sidebar">
               <div className={side('sidebar-header')}>
                 <button type="button" className={side('sidebar-settings-btn')} aria-label="Open graph">
                   <Network size={16} />
@@ -499,7 +512,7 @@ export default function ProductPlayground({ fill = false }: { fill?: boolean }) 
                 <div className={ed('note-editor-workspace')}>
                   <div className={ed('note-editor-body', `note-editor-body--${mode}`)}>
                     {mode !== 'preview' ? (
-                      <div className={ed('split-pane', 'split-pane--editor')}>
+                      <div className={ed('split-pane', 'split-pane--editor')} data-demo="editor">
                         <CodeMirrorEditor
                           noteId={selected.id}
                           value={selected.content}
@@ -510,7 +523,7 @@ export default function ProductPlayground({ fill = false }: { fill?: boolean }) 
                       </div>
                     ) : null}
                     {mode !== 'editor' ? (
-                      <div className={ed('split-pane', 'split-pane--preview')}>
+                      <div className={ed('split-pane', 'split-pane--preview')} data-demo="preview">
                         <div className={preview('markdown-preview')} data-preview>
                           <MarkdownView
                             content={selected.content}
@@ -523,7 +536,7 @@ export default function ProductPlayground({ fill = false }: { fill?: boolean }) 
                     ) : null}
                   </div>
                   {outlineOpen ? (
-                    <aside className={outline('outline')} aria-label="Note outline">
+                    <aside className={outline('outline')} aria-label="Note outline" data-demo="outline">
                       <p className={outline('outline-label')}>Outline</p>
                       {headings.length === 0 ? (
                         <p className={outline('outline-empty')}>No headings</p>
@@ -556,29 +569,7 @@ export default function ProductPlayground({ fill = false }: { fill?: boolean }) 
             )}
           </main>
         </div>
-        {tour.status === 'running' || tour.status === 'done' ? (
-          <div className="demo-hud" onPointerDown={event => event.stopPropagation()}>
-            <div className="demo-hud__copy">
-              <p className="demo-hud__caption">
-                {tour.status === 'done' ? 'That’s every feature in this window.' : tour.caption}
-              </p>
-              <p className="demo-hud__dots" aria-hidden="true">
-                {demoSlides.map((_, index) => (
-                  <span key={index} data-on={index === tour.slide && tour.status === 'running'} />
-                ))}
-              </p>
-            </div>
-            {tour.status === 'done' ? (
-              <button type="button" className="demo-hud__retry" onClick={tour.start}>
-                Retry
-              </button>
-            ) : (
-              <span className="demo-hud__step">
-                {tour.slide + 1}/{tour.total}
-              </span>
-            )}
-          </div>
-        ) : null}
+        <DemoOverlay />
       </div>
     </div>
   );

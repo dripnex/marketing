@@ -25,6 +25,8 @@
     "@radix-ui/react-accordion": "^1.2.13",
     "@radix-ui/react-dialog": "^1.1.16",
     "@radix-ui/react-slot": "^1.2.5",
+    "cairn-react": "^0.2.1",
+    "cairn-ui": "^0.3.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.40.0",
