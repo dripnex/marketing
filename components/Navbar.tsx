@@ -8,6 +8,7 @@ import { DOCS_URL } from '@/lib/config';
 type NavLink = { label: string; href: string; external?: boolean };
 
 const links: NavLink[] = [
+  { label: 'Try', href: '/try' },
   { label: 'Download', href: '/download' },
   { label: 'Plugins', href: '/plugins' },
   { label: 'Docs', href: DOCS_URL, external: true },

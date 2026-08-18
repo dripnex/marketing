@@ -1,7 +1,8 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
+import { useSearchParams } from 'next/navigation';
 import {
   FileStack,
   Folder,
@@ -60,7 +61,9 @@ function excerpt(content: string): string {
     .join(' ');
 }
 
-export default function ProductPlayground() {
+export default function ProductPlayground({ fill = false }: { fill?: boolean }) {
+  const params = useSearchParams();
+  const featureParam = params.get('f');
   const [notes, setNotes] = useState<DemoNote[]>(seedNotes);
   const [filter, setFilter] = useState<Filter>('all');
   const [statusFilter, setStatusFilter] = useState<NoteStatus | null>(null);
@@ -72,8 +75,6 @@ export default function ProductPlayground() {
   const [outlineOpen, setOutlineOpen] = useState(false);
   const [jumpToLine, setJumpToLine] = useState<number | null>(null);
   const [notebookQuery, setNotebookQuery] = useState('');
-
-  const feature = features.find(item => item.id === featureId) ?? features[0];
 
   const visible = useMemo(() => {
     let scoped = filter === 'all' ? notes : notes.filter(note => note.notebook === filter);
@@ -133,6 +134,12 @@ export default function ProductPlayground() {
     setQuery('');
     setJumpToLine(null);
   }
+
+  useEffect(() => {
+    if (!featureParam) return;
+    if (!features.some(item => item.id === featureParam)) return;
+    applyFeature(featureParam as FeatureId);
+  }, [featureParam]);
 
   function selectFilter(next: Filter) {
     setFilter(next);
@@ -194,47 +201,20 @@ export default function ProductPlayground() {
   });
 
   return (
-    <div>
-      <div
-        style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 10 }}
-        role="tablist"
-        aria-label="Product features"
-      >
-        {features.map(item => (
-          <button
-            key={item.id}
-            type="button"
-            role="tab"
-            aria-selected={featureId === item.id}
-            onClick={() => applyFeature(item.id)}
-            style={{
-              border: 0,
-              borderRadius: 6,
-              background: featureId === item.id ? 'rgba(255,255,255,0.08)' : 'transparent',
-              padding: '6px 10px',
-              color: featureId === item.id ? '#f4f4f5' : 'rgba(255,255,255,0.45)',
-              fontSize: 13,
-              cursor: 'pointer',
-            }}
-          >
-            {item.label}
-          </button>
-        ))}
-      </div>
-      <p style={{ margin: '0 0 14px', color: 'rgba(255,255,255,0.4)', fontSize: 13 }}>
-        {feature.hint}
-      </p>
-
+    <div className={fill ? 'h-full' : undefined}>
       <div
         className="dripnex-app"
-        style={{
-          height: 'min(72vh, 680px)',
-          minHeight: 520,
-          border: '1px solid var(--border)',
-          borderRadius: 10,
-          overflow: 'hidden',
-          boxShadow: '0 24px 80px -32px rgba(0,0,0,0.8)',
-        }}
+        style={
+          fill
+            ? { height: '100%' }
+            : {
+                height: 'min(72vh, 680px)',
+                minHeight: 520,
+                border: '1px solid var(--border)',
+                borderRadius: 10,
+                overflow: 'hidden',
+              }
+        }
       >
         <div className="app__layout">
           <aside className="app__sidebar">

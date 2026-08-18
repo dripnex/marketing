@@ -1,8 +1,6 @@
 import './globals.css';
-import '@fontsource/inter/400.css';
-import '@fontsource/inter/500.css';
-import '@fontsource/inter/600.css';
-import '@fontsource/inter/700.css';
+import '@fontsource-variable/source-serif-4/wght.css';
+import '@fontsource-variable/source-sans-3/wght.css';
 import '@fontsource-variable/jetbrains-mono';
 import type { ReactNode } from 'react';
 import type { Metadata } from 'next';
