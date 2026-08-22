@@ -46,7 +46,7 @@ export default function Footer() {
               <span className="font-mono text-sm text-text-primary">dripnex.</span>
             </Link>
             <p className="mt-3 max-w-[16rem] text-[13px] leading-relaxed text-text-muted">
-              Local files. Standard Markdown.
+              Local files. Standard Markdown. Offline first.
             </p>
           </div>
           {columns.map(column => (

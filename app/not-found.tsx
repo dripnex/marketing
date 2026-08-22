@@ -1,7 +1,8 @@
 import Link from 'next/link';
-import { Frown, Home } from 'lucide-react';
+import { Home } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { NotFoundMark } from '@/components/empty/EmptyMark';
 
 export default function NotFound() {
   return (
@@ -12,7 +13,7 @@ export default function NotFound() {
           <div className="w-full max-w-[480px]">
             <div className="text-center rounded-xl bg-surface p-8 sm:p-12">
               <div className="flex items-center justify-center mb-6 text-[#71717a]">
-                <Frown size={80} />
+                <NotFoundMark />
               </div>
 
               <span className="block font-mono text-6xl sm:text-[6rem] font-extrabold leading-none mb-4 text-accent">

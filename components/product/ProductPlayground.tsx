@@ -38,6 +38,7 @@ import { EditorViewToggle } from '../desktop/EditorViewToggle';
 import { StatusGlyph } from '../desktop/StatusGlyph';
 import { scanMarkdown } from '@/lib/markdown/scan';
 import { FlowProvider, useFlow } from 'cairn-react';
+import { EditorEmptyMark, ListEmptyMark } from '@/components/empty/EmptyMark';
 import { dripnexDemoFlow } from './demoFlow';
 import { demoHost } from './demoHost';
 import type { EditorView } from '@codemirror/view';
@@ -472,6 +473,15 @@ function PlaygroundInner({ fill }: { fill: boolean }) {
                   </li>
                 ))}
               </ul>
+              {visible.length === 0 ? (
+                <div className={list('note-list-empty')}>
+                  <div className={list('empty-icon')}>
+                    <ListEmptyMark />
+                  </div>
+                  <p className={list('empty-title')}>No notes in this filter</p>
+                  <p className={list('empty-hint')}>Clear search or pick another notebook</p>
+                </div>
+              ) : null}
             </div>
           </nav>
 
@@ -582,6 +592,9 @@ function PlaygroundInner({ fill }: { fill: boolean }) {
               </>
             ) : (
               <div className={ed('note-editor-empty')}>
+                <div className={ed('empty-icon')}>
+                  <EditorEmptyMark />
+                </div>
                 <p className={ed('empty-title')}>Select a note to edit</p>
                 <p className={ed('empty-hint')}>Or press ⌘N to create a new one</p>
               </div>
