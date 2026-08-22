@@ -29,8 +29,8 @@ export default function SubscriptionCancelPage() {
           <div className="p-6 sm:p-8 rounded-xl bg-surface text-left">
             <h3 className="text-xl sm:text-2xl font-bold text-[#f4f4f5] mb-4">Try Dripnex Free</h3>
             <p className="text-[#a1a1aa] mb-6">
-              Get started with unlimited local notes, full markdown editor, and 100% offline
-              functionality.
+              Get started with unlimited local notes, a full markdown editor, and files that stay on
+              disk. Works offline after sign-in.
             </p>
             <Link
               href="/download"

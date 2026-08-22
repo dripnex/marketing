@@ -1,7 +1,30 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import {
+  BookMarked,
+  GitBranch,
+  Heading,
+  ListChecks,
+  ListTree,
+  Slash,
+  SquareCheck,
+  Terminal,
+  TriangleAlert,
+  Workflow,
+} from 'lucide';
+import { SiteMorphIcon } from '@/components/icons/SiteMorphIcon';
 import { features, type FeatureId } from './scenes';
+import type { IconInput } from 'morphicons/react';
+
+const featureIcons: Record<FeatureId, { from: IconInput; to: IconInput }> = {
+  write: { from: Slash, to: Terminal },
+  outline: { from: ListTree, to: Heading },
+  alerts: { from: TriangleAlert, to: BookMarked },
+  tasks: { from: ListChecks, to: SquareCheck },
+  mermaid: { from: Workflow, to: GitBranch },
+  notebooks: { from: BookMarked, to: ListTree },
+};
 
 export default function ProductEmbed() {
   const [feature, setFeature] = useState<FeatureId>('write');
@@ -32,12 +55,17 @@ export default function ProductEmbed() {
                 setLive(false);
                 setFeature(item.id);
               }}
-              className={`rounded-md px-2.5 py-1 text-[13px] transition-colors ${
+              className={`inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[13px] transition-colors ${
                 feature === item.id
                   ? 'bg-white/[0.08] text-text-primary'
                   : 'text-text-muted hover:text-text-primary'
               }`}
             >
+              <SiteMorphIcon
+                icon={feature === item.id ? featureIcons[item.id].to : featureIcons[item.id].from}
+                size={14}
+                className="text-current"
+              />
               {item.label}
             </button>
           ))}

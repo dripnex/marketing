@@ -38,7 +38,7 @@ const sections = [
       'No dependency graph outside your disk',
     ],
     footer:
-      "The app works entirely offline. Your files are standard Markdown. If we disappear tomorrow, your notes don't.",
+      "After you sign in, the app works offline. Your files are standard Markdown. If we disappear tomorrow, your notes don't.",
   },
   {
     title: 'The trade',
@@ -149,7 +149,7 @@ export default function PhilosophyPage() {
             Ready to try software that respects your files?
           </h3>
           <p className="text-base text-text-secondary mb-8 max-w-[44ch] mx-auto">
-            Download for free. No account needed.
+            Download for free. Sign in once, then work offline. Don&apos;t Sync is valid.
           </p>
           <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
             <Link

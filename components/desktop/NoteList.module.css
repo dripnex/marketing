@@ -437,9 +437,10 @@
 }
 
 .note-list-empty .empty-icon {
-  font-size: 32px;
+  display: flex;
   margin-bottom: 12px;
   opacity: 0.6;
+  color: var(--text-muted);
 }
 
 .note-list-empty .empty-title {

@@ -22,9 +22,10 @@
 }
 
 .note-editor-empty .empty-icon {
-  font-size: 48px;
+  display: flex;
   margin-bottom: 16px;
   opacity: 0.5;
+  color: var(--text-muted);
 }
 
 .note-editor-empty .empty-title {

@@ -1,37 +1,20 @@
 import Link from 'next/link';
 import ProductEmbed from '@/components/product/ProductEmbed';
+import FeatureBeats from '@/components/home/FeatureBeats';
+import { HeroKicker } from '@/components/home/HeroKicker';
 import { DOCS_URL } from '@/lib/config';
-
-const decisions = [
-  {
-    kicker: '01',
-    title: 'The file is the note',
-    body: 'Standard Markdown on disk. The editor is a window, not a silo. If the app goes away, the notes do not.',
-  },
-  {
-    kicker: '02',
-    title: 'Offline is the default',
-    body: 'No account to open a file. Sync is optional, end-to-end, and never the source of truth.',
-  },
-  {
-    kicker: '03',
-    title: 'Hackable on purpose',
-    body: 'init.js, styles.css, keybindings.json. A plugin is its own git repo — tag, pack, install.',
-  },
-];
 
 export default function HomePage() {
   return (
     <div>
       <section className="mx-auto max-w-3xl px-5 pt-32 pb-16 sm:pt-40 sm:pb-20">
-        <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-accent">
-          Desktop · local Markdown
-        </p>
+        <HeroKicker />
         <h1 className="mt-5 font-serif text-[clamp(2.6rem,7vw,4.4rem)] font-medium leading-[1.05] tracking-[-0.03em] text-text-primary">
-          Your notes remain files.
+          Your Markdown, on your machine.
         </h1>
-        <p className="mt-6 max-w-[34ch] text-[17px] leading-relaxed text-text-secondary">
-          Dripnex is a desktop editor for Markdown you already own. Try it here. Keep it on disk.
+        <p className="mt-6 max-w-[38ch] text-[17px] leading-relaxed text-text-secondary">
+          A desktop editor for notes that stay files. GitHub Flavored Markdown, local-first, offline
+          by default. The editor is the product — not a cloud notebook you have to keep.
         </p>
         <div className="mt-9 flex flex-wrap items-center gap-x-7 gap-y-3">
           <Link
@@ -60,26 +43,16 @@ export default function HomePage() {
       </section>
 
       <section className="mx-auto max-w-3xl border-t border-white/[0.06] px-5 py-24">
-        <div className="grid gap-16 sm:grid-cols-3 sm:gap-10">
-          {decisions.map(item => (
-            <div key={item.title}>
-              <p className="font-mono text-[11px] text-accent">{item.kicker}</p>
-              <h2 className="mt-3 font-serif text-[1.35rem] leading-snug text-text-primary">
-                {item.title}
-              </h2>
-              <p className="mt-3 text-[14px] leading-relaxed text-text-secondary">{item.body}</p>
-            </div>
-          ))}
-        </div>
+        <FeatureBeats />
       </section>
 
       <section className="mx-auto max-w-3xl border-t border-white/[0.06] px-5 py-24">
         <h2 className="max-w-[16ch] font-serif text-[clamp(1.8rem,4vw,2.6rem)] leading-[1.15] tracking-[-0.02em] text-text-primary">
           Same editor. Then it lives on your machine.
         </h2>
-        <p className="mt-5 max-w-[40ch] text-[15px] leading-relaxed text-text-secondary">
-          The window above is Dripnex. Download when you want the files next to everything else you
-          already keep.
+        <p className="mt-5 max-w-[42ch] text-[15px] leading-relaxed text-text-secondary">
+          The window above is Dripnex. Download the desktop app when you want the files next to
+          everything else you already keep. Sync if you want it. Don&apos;t if you don&apos;t.
         </p>
         <Link
           href="/download"
