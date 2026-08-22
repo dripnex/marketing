@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
-import { MessageCircle } from 'lucide-react';
+import { MessageCircle, MessagesSquare } from 'lucide';
+import { MorphGlyph } from '@/components/icons/MorphGlyph';
 import { getProductConfig, URLS } from '@/lib/config';
 import FaqAccordion from '@/components/FaqAccordion';
 
@@ -20,7 +21,7 @@ export default function FaqPage() {
         {
           question: 'What is Dripnex?',
           answer:
-            'Dripnex is a desktop Markdown notetaker. Notes live in a local SQLite database as Markdown. An account is required; cloud sync is optional and end-to-end encrypted.',
+            "Dripnex is a local-first Markdown editor. Notes are GitHub Flavored Markdown on disk; SQLite is an index. An account is required to open the app. After that, offline is the default. Don't Sync is a valid choice — cloud sync is optional and end-to-end encrypted.",
         },
         {
           question: 'Is my data stored in the cloud?',
@@ -35,7 +36,7 @@ export default function FaqPage() {
         {
           question: 'What file format does Dripnex use?',
           answer:
-            'Note bodies are standard Markdown stored in local SQLite. You can export Markdown any time and open it in another editor.',
+            'Note bodies are GitHub Flavored Markdown stored on disk, with a local SQLite index. You can export Markdown any time and open it in another editor.',
         },
       ],
     },
@@ -45,7 +46,7 @@ export default function FaqPage() {
         {
           question: 'Can I sync between devices?',
           answer:
-            'Yes, optionally. Sync is end-to-end encrypted: you set a passphrase, and the server only stores ciphertext. Sync will not start until that key is set up.',
+            "Yes, optionally. Don't Sync is valid — you can stay local. If you turn sync on, it is end-to-end encrypted: you set a passphrase, and the server only stores ciphertext. Sync will not start until that key is set up.",
         },
         {
           question: 'Does Dripnex support backlinks?',
@@ -119,7 +120,7 @@ export default function FaqPage() {
 
         <div className="text-center rounded-xl bg-surface p-8 sm:p-12 mt-16">
           <div className="w-14 h-14 flex items-center justify-center mx-auto mb-5 bg-accent/10 rounded-lg text-accent">
-            <MessageCircle size={28} />
+            <MorphGlyph rest={MessageCircle} active={MessagesSquare} size={28} />
           </div>
           <h3 className="text-xl font-bold text-white mb-2">Still have questions?</h3>
           <p className="text-base text-text-secondary mb-8 max-w-md mx-auto">

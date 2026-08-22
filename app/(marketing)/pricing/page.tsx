@@ -1,15 +1,19 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import {
-  Heart,
-  Zap,
+  BadgeCheck,
+  Heart as HeartData,
+  HeartHandshake,
+  Lock as LockData,
+  LockKeyhole,
+  RefreshCw as RefreshData,
+  RotateCcw,
   ShieldCheck,
-  Lock,
-  RefreshCw,
-  Sparkles,
-  Check,
-  ArrowRight,
-} from 'lucide-react';
+  Sparkles as SparklesData,
+  Zap as ZapData,
+} from 'lucide';
+import { ArrowRight, Check, Heart, Sparkles, Zap } from 'lucide-react';
+import { MorphGlyph } from '@/components/icons/MorphGlyph';
 import { getProductConfig } from '@/lib/config';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -56,8 +60,8 @@ export default function PricingPage() {
             <span className="text-accent">Pro when you need it.</span>
           </h1>
           <p className="text-lg text-text-secondary max-w-[540px] mx-auto">
-            Start with the free tier -- it does a lot. Upgrade to Pro when you want sync, graph
-            view, and all the extras.
+            Start with the editor on disk. Upgrade to Pro when you want optional sync. Don&apos;t
+            Sync remains valid.
           </p>
         </header>
 
@@ -67,7 +71,7 @@ export default function PricingPage() {
           <Card className="p-6 sm:p-8">
             <div className="pb-6 border-b border-border mb-4">
               <div className="w-11 h-11 flex items-center justify-center rounded-lg bg-accent/10 text-accent mb-4">
-                <Heart size={22} />
+                <MorphGlyph rest={HeartData} active={HeartHandshake} size={22} />
               </div>
               <div className="text-lg font-semibold text-text-primary mb-2">{plans.free.name}</div>
               <div className="flex items-baseline gap-2">
@@ -111,7 +115,7 @@ export default function PricingPage() {
 
             <div className="pb-6 border-b border-border mb-4">
               <div className="w-11 h-11 flex items-center justify-center rounded-lg bg-accent/10 text-accent mb-4">
-                <Zap size={22} />
+                <MorphGlyph rest={ZapData} active={SparklesData} size={22} />
               </div>
               <div className="text-lg font-semibold text-text-primary mb-2">{plans.pro.name}</div>
               <div className="flex items-baseline gap-3 flex-wrap">
@@ -172,15 +176,15 @@ export default function PricingPage() {
         {/* Trust signals */}
         <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 mb-20 py-6">
           <div className="flex items-center gap-2 text-sm text-text-muted">
-            <ShieldCheck size={18} className="text-accent" />
+            <MorphGlyph rest={ShieldCheck} active={BadgeCheck} size={18} className="text-accent" />
             <span>No credit card required</span>
           </div>
           <div className="flex items-center gap-2 text-sm text-text-muted">
-            <Lock size={18} className="text-accent" />
+            <MorphGlyph rest={LockData} active={LockKeyhole} size={18} className="text-accent" />
             <span>Your data stays local</span>
           </div>
           <div className="flex items-center gap-2 text-sm text-text-muted">
-            <RefreshCw size={18} className="text-accent" />
+            <MorphGlyph rest={RefreshData} active={RotateCcw} size={18} className="text-accent" />
             <span>Cancel anytime</span>
           </div>
         </div>

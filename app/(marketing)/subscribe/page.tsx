@@ -5,7 +5,7 @@ import SubscribeFlow from '@/components/SubscribeFlow';
 export const metadata: Metadata = {
   title: 'Get Dripnex Pro',
   description:
-    'Start your free trial of Dripnex Pro with cloud sync, backlinks, and advanced features.',
+    "Start your free trial of Dripnex Pro. Optional sync and extras — Don't Sync stays valid.",
 };
 
 export default function SubscribePage() {

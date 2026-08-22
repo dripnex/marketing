@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
-import { Download, Check, Cpu, ExternalLink } from 'lucide-react';
+import { CircuitBoard, Cpu as CpuData } from 'lucide';
+import { Download, Check, ExternalLink } from 'lucide-react';
+import { MorphGlyph } from '@/components/icons/MorphGlyph';
 import { getProductConfig } from '@/lib/config';
 import { fetchLatestRelease, formatBytes } from '@/lib/github';
 import type { PlatformAsset } from '@/lib/github';
@@ -52,7 +54,7 @@ export default async function DownloadPage() {
           {isReleased ? (
             <>
               <p className="text-lg text-text-secondary mb-5">
-                Try free for {config.trialDays} days. No account required.
+                Try free for {config.trialDays} days. Sign in once; work offline after that.
               </p>
               <div className="flex items-center justify-center gap-3 flex-wrap">
                 <span className="inline-flex items-center px-5 py-2 font-mono text-sm font-semibold rounded-full bg-accent/10 border border-accent/20 text-accent">
@@ -241,7 +243,7 @@ export default async function DownloadPage() {
         {/* System Requirements */}
         <Card className="p-6 sm:p-8 mb-10">
           <h3 className="text-lg font-semibold text-text-primary mb-6 flex items-center gap-3">
-            <Cpu size={20} className="text-accent" />
+            <MorphGlyph rest={CpuData} active={CircuitBoard} size={20} className="text-accent" />
             System requirements
           </h3>
           <dl className="flex flex-col">

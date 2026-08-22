@@ -12,7 +12,8 @@ export const metadata: Metadata = {
     default: 'Dripnex — Your Markdown, on your machine.',
     template: '%s | Dripnex',
   },
-  description: 'A clean editor for notes that remain files. Local Markdown, no platform.',
+  description:
+    "A local-first Markdown editor. Files and SQLite on disk. Offline after you sign in. Don't Sync is valid.",
   applicationName: 'Dripnex',
   icons: {
     icon: [

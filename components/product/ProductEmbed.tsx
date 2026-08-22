@@ -1,7 +1,31 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import {
+  Book,
+  BookOpen,
+  Circle,
+  CircleCheck,
+  Info,
+  List,
+  ListTree,
+  Share2,
+  Slash,
+  Terminal,
+  TriangleAlert,
+  Workflow,
+} from 'lucide';
+import { MorphGlyph } from '@/components/icons/MorphGlyph';
 import { features, type FeatureId } from './scenes';
+
+const featureIcons: Record<FeatureId, { rest: typeof Slash; active: typeof Terminal }> = {
+  write: { rest: Slash, active: Terminal },
+  outline: { rest: ListTree, active: List },
+  alerts: { rest: Info, active: TriangleAlert },
+  tasks: { rest: Circle, active: CircleCheck },
+  mermaid: { rest: Share2, active: Workflow },
+  notebooks: { rest: Book, active: BookOpen },
+};
 
 export default function ProductEmbed() {
   const [feature, setFeature] = useState<FeatureId>('write');
@@ -32,12 +56,18 @@ export default function ProductEmbed() {
                 setLive(false);
                 setFeature(item.id);
               }}
-              className={`rounded-md px-2.5 py-1 text-[13px] transition-colors ${
+              className={`inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[13px] transition-colors ${
                 feature === item.id
                   ? 'bg-white/[0.08] text-text-primary'
                   : 'text-text-muted hover:text-text-primary'
               }`}
             >
+              <MorphGlyph
+                rest={featureIcons[item.id].rest}
+                active={featureIcons[item.id].active}
+                engaged={feature === item.id}
+                size={13}
+              />
               {item.label}
             </button>
           ))}

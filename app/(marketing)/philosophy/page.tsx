@@ -56,7 +56,7 @@ const sections = [
     list: [
       'Backlinks — computed from your files',
       'Search — an index rebuilt from your files',
-      'Graph view — visualization, not storage',
+      'GitHub Flavored Markdown — the file format, not a silo',
     ],
     footer: "The rule: if deleting our database doesn't lose your data, the feature is allowed.",
   },
@@ -149,7 +149,7 @@ export default function PhilosophyPage() {
             Ready to try software that respects your files?
           </h3>
           <p className="text-base text-text-secondary mb-8 max-w-[44ch] mx-auto">
-            Download for free. No account needed.
+            Download for free. Sign in once; the editor stays on your machine.
           </p>
           <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
             <Link

@@ -2,21 +2,87 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import {
+  ArrowDownToLine,
+  Blocks,
+  BookOpen,
+  BookText,
+  Download,
+  LogIn,
+  Menu,
+  PenLine,
+  Puzzle,
+  SquarePen,
+  Tag,
+  Tags,
+  User,
+  UserPlus,
+  X,
+} from 'lucide';
+import { MorphIcon } from 'morphicons/react';
 import { Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { MorphNavIcon } from '@/components/icons/MorphGlyph';
 import { DOCS_URL } from '@/lib/config';
 
-type NavLink = { label: string; href: string; external?: boolean };
+type NavLink = {
+  label: string;
+  href: string;
+  external?: boolean;
+  rest: typeof PenLine;
+  active: typeof SquarePen;
+};
 
 const links: NavLink[] = [
-  { label: 'Try', href: '/try' },
-  { label: 'Download', href: '/download' },
-  { label: 'Plugins', href: '/plugins' },
-  { label: 'Docs', href: DOCS_URL, external: true },
-  { label: 'Pricing', href: '/pricing' },
+  { label: 'Try', href: '/try', rest: PenLine, active: SquarePen },
+  { label: 'Download', href: '/download', rest: Download, active: ArrowDownToLine },
+  { label: 'Plugins', href: '/plugins', rest: Puzzle, active: Blocks },
+  { label: 'Docs', href: DOCS_URL, external: true, rest: BookOpen, active: BookText },
+  { label: 'Pricing', href: '/pricing', rest: Tag, active: Tags },
 ];
 
 const navLinkClass =
-  'px-2.5 py-1 text-[13px] text-text-secondary transition-colors hover:text-text-primary';
+  'inline-flex items-center gap-1.5 px-2.5 py-1 text-[13px] text-text-secondary transition-colors hover:text-text-primary';
+
+function NavItem({
+  link,
+  onNavigate,
+  className = navLinkClass,
+}: {
+  link: NavLink | { label: string; href: string; rest: typeof LogIn; active: typeof User };
+  onNavigate?: () => void;
+  className?: string;
+}) {
+  const [hovered, setHovered] = useState(false);
+  const icon = <MorphNavIcon rest={link.rest} active={link.active} engaged={hovered} />;
+
+  if ('external' in link && link.external) {
+    return (
+      <a
+        href={link.href}
+        className={className}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        onClick={onNavigate}
+      >
+        {icon}
+        {link.label}
+      </a>
+    );
+  }
+
+  return (
+    <Link
+      href={link.href}
+      className={className}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onClick={onNavigate}
+    >
+      {icon}
+      {link.label}
+    </Link>
+  );
+}
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -35,20 +101,10 @@ export default function Navbar() {
         </Link>
 
         <div className="hidden items-center gap-1 md:flex">
-          {links.map(link =>
-            link.external ? (
-              <a key={link.href} href={link.href} className={navLinkClass}>
-                {link.label}
-              </a>
-            ) : (
-              <Link key={link.href} href={link.href} className={navLinkClass}>
-                {link.label}
-              </Link>
-            ),
-          )}
-          <Link href="/login" className={navLinkClass}>
-            Sign in
-          </Link>
+          {links.map(link => (
+            <NavItem key={link.href} link={link} />
+          ))}
+          <NavItem link={{ label: 'Sign in', href: '/login', rest: LogIn, active: User }} />
           <Link
             href="/signup"
             className="ml-1 rounded-md bg-text-primary px-2.5 py-1 text-[13px] font-medium text-background hover:opacity-80"
@@ -64,20 +120,15 @@ export default function Navbar() {
                 type="button"
                 className="flex h-8 w-8 items-center justify-center rounded-md text-text-secondary hover:text-text-primary"
                 aria-label="Open navigation menu"
+                aria-expanded={open}
               >
-                <svg
-                  className="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
+                <MorphIcon
+                  icon={open ? X : Menu}
+                  size={20}
                   strokeWidth={1.5}
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-                  />
-                </svg>
+                  reducedMotion="user"
+                  spring="snappy"
+                />
               </button>
             </SheetTrigger>
             <SheetContent>
@@ -90,27 +141,15 @@ export default function Navbar() {
               <ul className="mt-8 space-y-1">
                 {[
                   ...links,
-                  { label: 'Sign in', href: '/login' },
-                  { label: 'Sign up', href: '/signup' },
+                  { label: 'Sign in', href: '/login', rest: LogIn, active: User },
+                  { label: 'Sign up', href: '/signup', rest: UserPlus, active: User },
                 ].map(link => (
                   <li key={link.href}>
-                    {link.external ? (
-                      <a
-                        href={link.href}
-                        onClick={() => setOpen(false)}
-                        className="block rounded-md px-3 py-3 text-sm text-text-secondary hover:bg-white/[0.04] hover:text-text-primary"
-                      >
-                        {link.label}
-                      </a>
-                    ) : (
-                      <Link
-                        href={link.href}
-                        onClick={() => setOpen(false)}
-                        className="block rounded-md px-3 py-3 text-sm text-text-secondary hover:bg-white/[0.04] hover:text-text-primary"
-                      >
-                        {link.label}
-                      </Link>
-                    )}
+                    <NavItem
+                      link={link}
+                      onNavigate={() => setOpen(false)}
+                      className="flex items-center gap-2.5 rounded-md px-3 py-3 text-sm text-text-secondary hover:bg-white/[0.04] hover:text-text-primary"
+                    />
                   </li>
                 ))}
               </ul>

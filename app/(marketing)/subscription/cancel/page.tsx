@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Undo2, Download, Zap, Cloud, LinkIcon, Search, GitBranch } from 'lucide-react';
+import { Undo2, Download, Zap, Cloud, FileText, LinkIcon, Search } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Checkout Canceled',
@@ -47,8 +47,8 @@ export default function SubscriptionCancelPage() {
               Changed your mind?
             </h3>
             <p className="text-[#a1a1aa] mb-6">
-              Pro includes cloud sync, backlinks, graph view, and advanced search. Start with a
-              14-day free trial.
+              Pro includes optional cloud sync, backlinks, and advanced search. Don&apos;t Sync
+              stays valid. Start with a 14-day free trial.
             </p>
             <Link
               href="/subscribe"
@@ -95,11 +95,13 @@ export default function SubscriptionCancelPage() {
             </div>
             <div className="text-center p-4 sm:p-6 rounded-xl bg-surface">
               <div className="flex items-center justify-center mb-4">
-                <GitBranch size={32} className="text-accent" />
+                <FileText size={32} className="text-accent" />
               </div>
-              <h4 className="text-base sm:text-lg font-semibold text-[#f4f4f5] mb-2">Graph View</h4>
+              <h4 className="text-base sm:text-lg font-semibold text-[#f4f4f5] mb-2">
+                Stay local
+              </h4>
               <p className="text-sm text-[#a1a1aa]">
-                Visualize relationships in your knowledge base
+                Don&apos;t Sync is valid. Files stay on disk either way.
               </p>
             </div>
           </div>
