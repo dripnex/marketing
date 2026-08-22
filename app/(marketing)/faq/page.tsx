@@ -20,7 +20,7 @@ export default function FaqPage() {
         {
           question: 'What is Dripnex?',
           answer:
-            'Dripnex is a desktop Markdown notetaker. Notes live in a local SQLite database as Markdown. An account is required; cloud sync is optional and end-to-end encrypted.',
+            'Dripnex is a desktop Markdown notetaker. Notes live in a local SQLite database as Markdown. An account is required. Don\'t Sync is a valid choice — cloud sync is optional and end-to-end encrypted.',
         },
         {
           question: 'Is my data stored in the cloud?',

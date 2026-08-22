@@ -52,7 +52,8 @@ export default async function DownloadPage() {
           {isReleased ? (
             <>
               <p className="text-lg text-text-secondary mb-5">
-                Try free for {config.trialDays} days. No account required.
+                Try free for {config.trialDays} days. Sign in once, then work offline. Don&apos;t
+                Sync is valid.
               </p>
               <div className="flex items-center justify-center gap-3 flex-wrap">
                 <span className="inline-flex items-center px-5 py-2 font-mono text-sm font-semibold rounded-full bg-accent/10 border border-accent/20 text-accent">

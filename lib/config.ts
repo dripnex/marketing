@@ -56,8 +56,8 @@ export function getProductConfig(): ProductConfig {
           'Export to markdown',
           'Import from folder',
           'Basic search',
-          '100% offline',
-          'No account required',
+          'Works offline after sign-in',
+          "Don't Sync — files stay on disk",
         ],
       },
       pro: {
