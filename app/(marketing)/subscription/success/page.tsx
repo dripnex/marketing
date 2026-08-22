@@ -77,8 +77,8 @@ export default function SubscriptionSuccessPage() {
           </h3>
           <ul className="list-none grid grid-cols-1 sm:grid-cols-2 gap-3">
             {[
-              'Optional cloud sync across devices',
-              'Backlinks computed from your files',
+              'Cloud sync across all your devices',
+              'Backlinks and graph view',
               'Advanced search capabilities',
               'Priority support',
               'Early access to new features',

@@ -85,7 +85,9 @@
 @media (prefers-reduced-motion: reduce) {
   .animate-shiny-text,
   .animate-accordion-down,
-  .animate-accordion-up {
+  .animate-accordion-up,
+  [data-morphicon],
+  [data-morphicon] svg {
     animation: none !important;
     transform: none !important;
     transition: none !important;

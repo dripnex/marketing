@@ -28,6 +28,7 @@ export function MorphGlyph({
   return (
     <span
       className={className}
+      data-morphicon=""
       aria-hidden="true"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -61,6 +62,7 @@ export function MorphNavIcon({
       strokeWidth={1.75}
       reducedMotion="user"
       spring="smooth"
+      data-morphicon=""
     />
   );
 }

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Calendar, Clock, ExternalLink } from 'lucide-react';
 import { marked } from 'marked';
 import { fetchAllReleases } from '@/lib/github';
+import { URLS } from '@/lib/config';
 import { loadWhatsNew } from '@/lib/whatsNew';
 import NewsletterForm from '@/components/NewsletterForm';
 
@@ -98,7 +99,7 @@ export default async function ChangelogPage() {
 
         <div className="mt-12 text-center">
           <a
-            href="https://github.com/dripnex/readide/releases"
+            href={`${URLS.github}/releases`}
             target="_blank"
             rel="noopener noreferrer"
             className="group inline-flex items-center gap-2 text-sm font-medium text-accent transition-colors hover:text-accent-hover"

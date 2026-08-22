@@ -128,6 +128,7 @@ export default function Navbar() {
                   strokeWidth={1.5}
                   reducedMotion="user"
                   spring="snappy"
+                  data-morphicon=""
                 />
               </button>
             </SheetTrigger>

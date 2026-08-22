@@ -8,14 +8,14 @@ const decisions = [
   {
     kicker: '01',
     title: 'The file is the note',
-    body: 'GitHub Flavored Markdown on disk. SQLite is an index, not a vault. If the app goes away, the notes do not.',
+    body: 'GitHub Flavored Markdown on disk. The editor is a window, not a silo. SQLite is an index — the files are the source of truth.',
     rest: FileText,
     active: File,
   },
   {
     kicker: '02',
-    title: "Don't Sync is valid",
-    body: 'Sign in once. After that, the editor works offline. Stay local — sync is optional, end-to-end, and never the source of truth.',
+    title: 'Offline is the default',
+    body: "Sign in first. After that, the editor works offline. Don't Sync is valid: stay local. Sync is optional, end-to-end, and never the source of truth.",
     rest: HardDrive,
     active: CloudOff,
   },
