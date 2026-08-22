@@ -109,7 +109,7 @@ const sections = [
   {
     title: 'Contact',
     content: ['For questions about these terms:'],
-    list: ['Email: legal@dripnex.app', 'GitHub: github.com/dripnex/readide'],
+    list: ['Email: legal@dripnex.app', 'GitHub: github.com/dripnex/app'],
   },
 ];
 

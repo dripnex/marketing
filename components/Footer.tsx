@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { DOCS_URL } from '@/lib/config';
+import { DOCS_URL, URLS } from '@/lib/config';
 
 type FooterLink = { label: string; href: string; external?: boolean };
 
@@ -79,7 +79,7 @@ export default function Footer() {
         <div className="mt-12 flex flex-col gap-3 text-[12px] text-text-muted sm:flex-row sm:items-center sm:justify-between">
           <span>&copy; {year} Dripnex</span>
           <a
-            href="https://github.com/dripnex/readide"
+            href={URLS.github}
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-text-secondary"
