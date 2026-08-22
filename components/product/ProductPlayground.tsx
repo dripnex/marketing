@@ -39,6 +39,7 @@ import { StatusGlyph } from '../desktop/StatusGlyph';
 import { scanMarkdown } from '@/lib/markdown/scan';
 import { FlowProvider, useFlow } from 'cairn-react';
 import { EditorEmptyMark, ListEmptyMark } from '@/components/empty/EmptyMark';
+import { usePrefersReducedMotion } from '@/components/icons/usePrefersReducedMotion';
 import { dripnexDemoFlow } from './demoFlow';
 import { demoHost } from './demoHost';
 import type { EditorView } from '@codemirror/view';
@@ -78,6 +79,7 @@ function PlaygroundInner({ fill }: { fill: boolean }) {
   const params = useSearchParams();
   const featureParam = params.get('f');
   const demoParam = params.get('demo');
+  const reducedMotion = usePrefersReducedMotion();
   const autoDemo = demoParam === '1' || (!featureParam && demoParam !== '0');
   const [editorView, setEditorView] = useState<EditorView | null>(null);
   const [notes, setNotes] = useState<DemoNote[]>(seedNotes);
@@ -176,8 +178,10 @@ function PlaygroundInner({ fill }: { fill: boolean }) {
   };
 
   useEffect(() => {
+    // usePrefersReducedMotion starts false; matchMedia blocks the first-frame start.
+    if (reducedMotion || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     if (autoDemo && state.status === 'idle') start();
-  }, [autoDemo, start, state.status]);
+  }, [autoDemo, reducedMotion, start, state.status]);
 
   useEffect(() => {
     if (!featureParam || autoDemo) return;
