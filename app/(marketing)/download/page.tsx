@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Download, Check, Cpu, ExternalLink } from 'lucide-react';
-import { getProductConfig } from '@/lib/config';
+import { getProductConfig, URLS } from '@/lib/config';
 import { fetchLatestRelease, formatBytes } from '@/lib/github';
 import type { PlatformAsset } from '@/lib/github';
 import NewsletterForm from '@/components/NewsletterForm';
@@ -267,7 +267,7 @@ export default async function DownloadPage() {
           <p className="text-base text-text-secondary leading-relaxed">
             Each release includes SHA256 checksums. Source available on{' '}
             <a
-              href="https://github.com/dripnex/readide"
+              href={URLS.github}
               target="_blank"
               rel="noopener noreferrer"
               className="text-accent underline underline-offset-2 inline-flex items-center gap-1 transition-colors hover:text-accent-hover hover:no-underline"

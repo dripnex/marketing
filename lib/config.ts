@@ -1,5 +1,5 @@
 export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://dripnex.app';
-export const DOCS_URL = process.env.NEXT_PUBLIC_DOCS_URL ?? 'https://docs.dripnex.app';
+export const DOCS_URL = process.env.NEXT_PUBLIC_DOCS_URL ?? 'https://dripnex-docs.pages.dev';
 
 export const URLS = {
   website: SITE_URL,
@@ -8,9 +8,9 @@ export const URLS = {
   download: `${SITE_URL}/download`,
   faq: `${SITE_URL}/faq`,
   changelog: `${SITE_URL}/changelog`,
-  github: 'https://github.com/dripnex/readide',
-  discussions: 'https://github.com/dripnex/readide/discussions',
-  issues: 'https://github.com/dripnex/readide/issues',
+  github: 'https://github.com/dripnex/app',
+  discussions: 'https://github.com/dripnex/app/discussions',
+  issues: 'https://github.com/dripnex/app/issues',
   twitter: 'https://x.com/dripnex',
   support: 'hello@dripnex.app',
   api: 'https://api.dripnex.app',
